@@ -1,0 +1,25 @@
+<div class="movies-container">
+  <h1>Movie Recommendations</h1>
+
+  @if (loading()) {
+    <p>Loading...</p>
+  }
+
+  @if (!loading() && movies().length === 0) {
+    <p class="empty-state">No movies found. Add some recommendations!</p>
+  }
+
+  <div class="movies-grid">
+    @for (movie of movies(); track movie.id) {
+      <p-card [header]="movie.title" styleClass="movie-card">
+        <ng-template #subtitle>
+          <p-tag [value]="movie.genre" severity="info" />
+        </ng-template>
+        <p>{{ movie.description }}</p>
+        <ng-template #footer>
+          <p-rating [(ngModel)]="movie.rating" [readonly]="true" />
+        </ng-template>
+      </p-card>
+    }
+  </div>
+</div>
