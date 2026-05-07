@@ -1,0 +1,28 @@
+meta {
+  name: Login Wrong Email
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{url}}/login
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "email": "test-test.com",
+      "password": "teste"
+  }
+}
+
+script:post-response {
+  test("Status code is 400", function () {
+      expect(res.getStatus()).to.equal(400);
+  });
+}
+
+settings {
+  encodeUrl: true
+}

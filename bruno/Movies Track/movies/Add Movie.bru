@@ -1,0 +1,36 @@
+meta {
+  name: Add Movie
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{url}}/movies
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "movieId": 302946,
+      "title": "The Accountant",
+      "poster": "/dTGECn8He16tZeBHQTLf6rVydE8.jpg"
+  }
+}
+
+script:post-response {
+  if (res.getSize().body > 0) {
+      var jsonData = res.getBody();
+      if (jsonData && jsonData.id) {
+          bru.setVar("movie_id", jsonData.id);
+      }
+  }
+  
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+}
+
+settings {
+  encodeUrl: true
+}

@@ -1,0 +1,21 @@
+meta {
+  name: Get Watchlist
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{url}}/movies/watchlist
+  body: json
+  auth: inherit
+}
+
+script:post-response {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+}
+
+settings {
+  encodeUrl: true
+}

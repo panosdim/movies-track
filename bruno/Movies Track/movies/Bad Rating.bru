@@ -1,0 +1,27 @@
+meta {
+  name: Bad Rating
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{url}}/movies/rate/{{movie_id}}
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "rating": 6
+  }
+}
+
+script:post-response {
+  test("Status code is 400", function () {
+      expect(res.getStatus()).to.equal(400);
+  });
+}
+
+settings {
+  encodeUrl: true
+}

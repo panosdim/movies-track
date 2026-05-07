@@ -1,0 +1,31 @@
+meta {
+  name: Register Wrong Email
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{url}}/register
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "email": "test.com",
+      "password": "testpass",
+      "lastName": "last name",
+      "firstName": "first name"
+  }
+  
+}
+
+script:post-response {
+  test("Status code is 400", function () {
+      expect(res.getStatus()).to.equal(400);
+  });
+}
+
+settings {
+  encodeUrl: true
+}

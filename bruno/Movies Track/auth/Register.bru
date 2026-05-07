@@ -1,0 +1,31 @@
+meta {
+  name: Register
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{url}}/register
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "email": "test@test.com",
+      "password": "testpass",
+      "firstName": "first name",
+      "lastName": "last name"
+  }
+  
+}
+
+script:post-response {
+  test("Status code is 204", function () {
+      expect(res.getStatus()).to.equal(204);
+  });
+}
+
+settings {
+  encodeUrl: true
+}

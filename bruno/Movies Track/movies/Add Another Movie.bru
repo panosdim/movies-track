@@ -1,0 +1,36 @@
+meta {
+  name: Add Another Movie
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{url}}/movies
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "movieId": 986056,
+      "title": "Thunderbolts*",
+      "poster": "/rthMuZfFv4fqEU4JVbgSW9wQ8rs.jpg"
+  }
+}
+
+script:post-response {
+  if (res.getSize().body > 0) {
+      var jsonData = res.getBody();
+      if (jsonData && jsonData.id) {
+          bru.setVar("delete_movie_id", jsonData.id);
+      }
+  }
+  
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+}
+
+settings {
+  encodeUrl: true
+}

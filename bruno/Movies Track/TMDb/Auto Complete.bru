@@ -1,0 +1,186 @@
+meta {
+  name: Auto Complete
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{url}}/autocomplete
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+      "term": "Avengers"
+  }
+}
+
+script:post-response {
+  test("Status code is 201", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  Return results for autocomplete input fields.
+}
+
+example {
+  name: Auto Complete
+  
+  request: {
+    url: {{url}}/autocomplete
+    method: POST
+    mode: multipartForm
+    headers: {
+      Content-Type: application/json
+    }
+  
+    body:multipart-form: {
+      term: Avengers
+    }
+  }
+  
+  response: {
+    headers: {
+      Server: nginx
+      Date: Thu, 14 Apr 2022 12:32:18 GMT
+      Content-Type: application/json
+      Transfer-Encoding: chunked
+      Connection: keep-alive
+      Vary: Accept-Encoding
+      Vary: Authorization
+      Cache-Control: private, must-revalidate
+      pragma: no-cache
+      expires: -1
+      Access-Control-Allow-Origin: *
+      Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE
+      Access-Control-Allow-Credentials: true
+      Access-Control-Max-Age: 86400
+      Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With
+      Content-Encoding: br
+    }
+  
+    status: {
+      code: OK
+      text: 200
+    }
+  
+    body: {
+      type: json
+      content: '''
+        [
+            [
+                "The Avengers",
+                "2012-04-25",
+                "https://image.tmdb.org/t/p/w45_and_h67_bestv2/RYMX2wcKCBAr24UyPD7xwmjaTn.jpg"
+            ],
+            [
+                "Avengers: Endgame",
+                "2019-04-24",
+                "https://image.tmdb.org/t/p/w45_and_h67_bestv2/or06FN3Dka5tukK1e9sl16pB3iy.jpg"
+            ],
+            [
+                "Avengers: Infinity War",
+                "2018-04-25",
+                "https://image.tmdb.org/t/p/w45_and_h67_bestv2/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg"
+            ],
+            [
+                "Avengers: Age of Ultron",
+                "2015-04-22",
+                "https://image.tmdb.org/t/p/w45_and_h67_bestv2/4ssDuvEDkSArWEdyBl2X5EHvYKU.jpg"
+            ],
+            [
+                "Avengers Grimm",
+                "2015-03-17",
+                "https://image.tmdb.org/t/p/w45_and_h67_bestv2/1SbBKCbnULACOqWKN7eLfTu1gVm.jpg"
+            ],
+            [
+                "The Avengers",
+                "1998-08-13",
+                "https://image.tmdb.org/t/p/w45_and_h67_bestv2/1p5thyQ4pCy876HpdvFARqJ62N9.jpg"
+            ],
+            [
+                "Next Avengers: Heroes of Tomorrow",
+                "2008-09-02",
+                "https://image.tmdb.org/t/p/w45_and_h67_bestv2/4NL4vwuh6AlwgGoNNlhVp52DRfi.jpg"
+            ],
+            [
+                "Ultimate Avengers 2",
+                "2006-08-08",
+                "https://image.tmdb.org/t/p/w45_and_h67_bestv2/bsDLG069v8esZkI2owKvduQIrq.jpg"
+            ],
+            [
+                "Ultimate Avengers: The Movie",
+                "2006-02-21",
+                "https://image.tmdb.org/t/p/w45_and_h67_bestv2/vd7GyPkDvDDfvcxgWAfkGpKiAkH.jpg"
+            ],
+            [
+                "Avengers Grimm: Time Wars",
+                "2018-05-01",
+                "https://image.tmdb.org/t/p/w45_and_h67_bestv2/xfAcu74DRQXeM9XqFcE5MrSRzYP.jpg"
+            ],
+            [
+                "Bikini Avengers",
+                "2015-02-24",
+                "https://image.tmdb.org/t/p/w45_and_h67_bestv2/ehTYWuPKwl8sXPX0I6LnvJUDaVl.jpg"
+            ],
+            [
+                "Building the Dream: Assembling the Avengers",
+                "2012-09-25",
+                "https://image.tmdb.org/t/p/w45_and_h67_bestv2/coS6rIaucxDzq20kiJozTgQ0Nmk.jpg"
+            ],
+            [
+                "LEGO Marvel Super Heroes: Avengers Reassembled!",
+                "2015-11-16",
+                "https://image.tmdb.org/t/p/w45_and_h67_bestv2/xUBZNoY7idPfqKZepnDEv7Qc8GC.jpg"
+            ],
+            [
+                "The Avengers: A Visual Journey",
+                "2012-09-25",
+                "https://image.tmdb.org/t/p/w45_and_h67_bestv2/2kBT7KONKQTIhkMc2ZtPU11E8Ky.jpg"
+            ],
+            [
+                "LEGO Marvel Avengers: Time Twisted",
+                "2022-01-17",
+                "https://image.tmdb.org/t/p/w45_and_h67_bestv2/7nA9AjJ8iZvbBPsFPC2FNoFj568.jpg"
+            ],
+            [
+                "Alien Avengers II",
+                "1997-10-25",
+                "https://image.tmdb.org/t/p/w45_and_h67_bestv2/4L3ajGP3ZsnM8xIrXjwEZOLYBjb.jpg"
+            ],
+            [
+                "Avengers of Justice: Farce Wars",
+                "2018-07-20",
+                "https://image.tmdb.org/t/p/w45_and_h67_bestv2/yymsCwKPbJIF1xcl2ih8fl7OxAa.jpg"
+            ],
+            [
+                "Alien Avengers",
+                "1996-08-03",
+                "https://image.tmdb.org/t/p/w45_and_h67_bestv2/Akd3Aqrr2q8PLKOCPOkOnB3AoJk.jpg"
+            ],
+            [
+                "The Avengers: Earth's Mightiest Heroes - Prelude",
+                "2010-09-22",
+                "https://image.tmdb.org/t/p/w45_and_h67_bestv2/3o7MpOaDkeAcvxqEjgbIcXrcepB.jpg"
+            ],
+            [
+                "The Avengers",
+                "1950-06-10",
+                null
+            ]
+        ]
+      '''
+    }
+  }
+}

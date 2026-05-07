@@ -1,0 +1,17 @@
+meta {
+  name: Movies Track
+}
+
+auth {
+  mode: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+script:post-response {
+  if (res.getBody() && res.getBody().token) {
+        bru.setVar("token", res.getBody().token);
+    }
+}

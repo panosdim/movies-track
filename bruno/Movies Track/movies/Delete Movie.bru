@@ -1,0 +1,25 @@
+meta {
+  name: Delete Movie
+  type: http
+  seq: 9
+}
+
+delete {
+  url: {{url}}/movies/{{delete_movie_id}}
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+script:post-response {
+  test("Status code is 204", function () {
+      expect(res.getStatus()).to.equal(204);
+  });
+}
+
+settings {
+  encodeUrl: true
+}

@@ -1,0 +1,26 @@
+meta {
+  name: Delete Movie Not Exist
+  type: http
+  seq: 10
+}
+
+delete {
+  url: {{url}}/movies/1500
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+script:post-response {
+  test("Status code is 404", function () {
+      expect(res.getStatus()).to.equal(404);
+  });
+  
+}
+
+settings {
+  encodeUrl: true
+}

@@ -1,0 +1,31 @@
+meta {
+  name: Register Real User
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{url}}/register
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "email": "panosdim@gmail.com",
+      "password": "netrino1!",
+      "firstName": "Panagiotis",
+      "lastName": "Dimopoulos"
+  }
+  
+}
+
+script:post-response {
+  test("Status code is 204", function () {
+      expect(res.getStatus()).to.equal(204);
+  });
+}
+
+settings {
+  encodeUrl: true
+}

@@ -1,0 +1,27 @@
+meta {
+  name: Login Missing parameter
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{url}}/login
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "email": "test@test.com"
+  }
+}
+
+script:post-response {
+  test("Status code is 400", function () {
+      expect(res.getStatus()).to.equal(400);
+  });
+}
+
+settings {
+  encodeUrl: true
+}
