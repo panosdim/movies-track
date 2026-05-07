@@ -1,0 +1,30 @@
+info:
+  name: Delete Movie
+  type: http
+  seq: 9
+
+http:
+  method: DELETE
+  url: "{{url}}/movies/{{delete_movie_id}}"
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: ""
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: "test(\"Status code is 204\", function () {\r
+
+        \    expect(res.getStatus()).to.equal(204);\r
+
+        });"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,30 @@
+info:
+  name: Delete Movie Not Exist
+  type: http
+  seq: 10
+
+http:
+  method: DELETE
+  url: "{{url}}/movies/1500"
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: ""
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: "test(\"Status code is 404\", function () {\r
+
+        \    expect(res.getStatus()).to.equal(404);\r
+
+        });"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

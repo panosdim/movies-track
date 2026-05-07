@@ -1,0 +1,30 @@
+info:
+  name: Delete Movie Missing Id
+  type: http
+  seq: 11
+
+http:
+  method: DELETE
+  url: "{{url}}/movies"
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: ""
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: "test(\"Status code is 405\", function () {\r
+
+        \    expect(res.getStatus()).to.equal(405);\r
+
+        });"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

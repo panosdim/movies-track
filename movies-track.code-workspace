@@ -45,7 +45,20 @@
       "**/node_modules": true,
       "**/.venv": true,
       "**/dist": true
-    }
+    },
+    "sqltools.connections": [
+      {
+        "ssh": "Disabled",
+        "previewLimit": 50,
+        "server": "localhost",
+        "port": 5433,
+        "driver": "PostgreSQL",
+        "name": "movies",
+        "database": "movies",
+        "username": "panosdim",
+        "password": "Test1!"
+      }
+    ]
   },
   "extensions": {
     "recommendations": [
@@ -63,14 +76,16 @@
     "version": "0.2.0",
     "configurations": [
       {
-        "name": "FastAPI: Uvicorn",
+        "name": "FastAPI: Uvicorn (Debug)",
         "type": "debugpy",
         "request": "launch",
         "module": "uvicorn",
-        "args": ["app.main:app", "--reload", "--port", "8000"],
+        "args": ["app.main:app", "--port", "8000"],
         "cwd": "${workspaceFolder:Backend (FastAPI)}",
         "python": "${workspaceFolder:Backend (FastAPI)}/.venv/Scripts/python.exe",
-        "console": "integratedTerminal"
+        "console": "integratedTerminal",
+        "justMyCode": false,
+        "stopOnEntry": false
       },
       {
         "name": "Angular: ng serve",

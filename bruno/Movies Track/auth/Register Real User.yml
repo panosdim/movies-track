@@ -1,0 +1,37 @@
+info:
+  name: Register Real User
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{url}}/register"
+  body:
+    type: json
+    data: "{\r
+
+      \    \"email\": \"panosdim@gmail.com\",\r
+
+      \    \"password\": \"netrino1!\",\r
+
+      \    \"firstName\": \"Panagiotis\",\r
+
+      \    \"lastName\": \"Dimopoulos\"\r
+
+      }\r\n"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: "test(\"Status code is 204\", function () {\r
+
+        \    expect(res.getStatus()).to.equal(204);\r
+
+        });"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

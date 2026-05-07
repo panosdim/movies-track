@@ -1,0 +1,26 @@
+info:
+  name: Login Wrong Email
+  type: http
+  seq: 7
+
+http:
+  method: POST
+  url: "{{url}}/login"
+  body:
+    type: json
+    data: "{\r\n    \"email\": \"test-test.com\",\r\n    \"password\": \"teste\"\r\n}"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        test("Status code is 422", function () {
+            expect(res.getStatus()).to.equal(422);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

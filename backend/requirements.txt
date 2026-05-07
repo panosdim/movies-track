@@ -21,3 +21,11 @@ websockets==16.0
 sqlalchemy>=2.0
 psycopg2-binary>=2.9
 alembic>=1.13
+
+# Authentication & Validation
+bcrypt>=4.0
+pyjwt>=2.8
+email-validator>=2.0
+
+# HTTP client
+httpx>=0.24

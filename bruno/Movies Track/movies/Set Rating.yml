@@ -1,0 +1,27 @@
+info:
+  name: Set Rating
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: "{{url}}/movies/rate/{{movie_id}}"
+  body:
+    type: json
+    data: "{\r\n    \"rating\": 4\r\n}"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: "test(\"Status code is 200\", function () {\r
+
+        \    expect(res.getStatus()).to.equal(200);\r
+
+        });"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -1,0 +1,49 @@
+info:
+  name: Add Another Movie
+  type: http
+  seq: 8
+
+http:
+  method: POST
+  url: "{{url}}/movies"
+  body:
+    type: json
+    data: "{\r
+
+      \    \"movieId\": 986056,\r
+
+      \    \"title\": \"Thunderbolts*\",\r
+
+      \    \"poster\": \"/rthMuZfFv4fqEU4JVbgSW9wQ8rs.jpg\"\r
+
+      }"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: "if (res.getSize().body > 0) {\r
+
+        \    var jsonData = res.getBody();\r
+
+        \    if (jsonData && jsonData.id) {\r
+
+        \        bru.setVar(\"delete_movie_id\", jsonData.id);\r
+
+        \    }\r
+
+        }\r
+
+        \r
+
+        test(\"Status code is 200\", function () {\r
+
+        \    expect(res.getStatus()).to.equal(200);\r
+
+        });"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

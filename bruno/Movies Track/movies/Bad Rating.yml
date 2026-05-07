@@ -1,0 +1,27 @@
+info:
+  name: Bad Rating
+  type: http
+  seq: 7
+
+http:
+  method: POST
+  url: "{{url}}/movies/rate/{{movie_id}}"
+  body:
+    type: json
+    data: "{\r\n    \"rating\": 6\r\n}"
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: "test(\"Status code is 400\", function () {\r
+
+        \    expect(res.getStatus()).to.equal(400);\r
+
+        });"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
