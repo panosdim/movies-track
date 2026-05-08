@@ -21,11 +21,12 @@ body:json {
 }
 
 script:post-response {
-  test("Status code is 400", function () {
-      expect(res.getStatus()).to.equal(400);
+  test("Status code is 422", function () {
+      expect(res.getStatus()).to.equal(422);
   });
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }

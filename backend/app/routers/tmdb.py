@@ -28,10 +28,8 @@ def search_movies(search_data: dict):
         with httpx.Client() as client:
             response = client.get(
                 f"{TMDB_BASE_URL}/search/movie",
-                params={
-                    "api_key": TMDB_API_KEY,
-                    "query": term,
-                },
+                params={"query": term},
+                headers={"Authorization": f"Bearer {TMDB_API_KEY}"},
             )
             response.raise_for_status()
             return response.json()
@@ -62,10 +60,8 @@ def autocomplete_movies(search_data: dict):
         with httpx.Client() as client:
             response = client.get(
                 f"{TMDB_BASE_URL}/search/movie",
-                params={
-                    "api_key": TMDB_API_KEY,
-                    "query": term,
-                },
+                params={"query": term},
+                headers={"Authorization": f"Bearer {TMDB_API_KEY}"},
             )
             response.raise_for_status()
             data = response.json()
@@ -78,7 +74,9 @@ def autocomplete_movies(search_data: dict):
                 poster_path = movie.get("poster_path")
 
                 if title and poster_path:
-                    poster_url = f"https://image.tmdb.org/t/p/w45_and_h67_bestv2{poster_path}"
+                    poster_url = (
+                        f"https://image.tmdb.org/t/p/w45_and_h67_bestv2{poster_path}"
+                    )
                     results.append([title, release_date, poster_url])
 
             return results
@@ -102,9 +100,7 @@ def get_popular_movies():
         with httpx.Client() as client:
             response = client.get(
                 f"{TMDB_BASE_URL}/movie/popular",
-                params={
-                    "api_key": TMDB_API_KEY,
-                },
+                headers={"Authorization": f"Bearer {TMDB_API_KEY}"},
             )
             response.raise_for_status()
             return response.json()

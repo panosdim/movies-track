@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, Header, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.database import get_db
@@ -9,7 +9,7 @@ from app.utils.jwt_token import verify_token
 router = APIRouter(prefix="/movies", tags=["movies"])
 
 
-def get_current_user_email(authorization: str | None = None) -> str:
+def get_current_user_email(authorization: str | None = Header(default=None)) -> str:
     """Extract and verify user email from Bearer token."""
     if not authorization:
         raise HTTPException(
@@ -46,7 +46,7 @@ def get_current_user_email(authorization: str | None = None) -> str:
 
 @router.get("/watched", response_model=list[Movie])
 def get_watched_movies(
-    authorization: str | None = None,
+    authorization: str | None = Header(default=None),
     db: Session = Depends(get_db),
 ):
     """Get all movies marked as watched by the current user."""
@@ -61,7 +61,7 @@ def get_watched_movies(
 
 @router.get("/watchlist", response_model=list[Movie])
 def get_watchlist(
-    authorization: str | None = None,
+    authorization: str | None = Header(default=None),
     db: Session = Depends(get_db),
 ):
     """Get all movies in the watchlist (not watched) for the current user."""
@@ -80,7 +80,7 @@ def get_watchlist(
 @router.post("/", response_model=Movie, status_code=200)
 def add_movie(
     movie_data: dict,
-    authorization: str | None = None,
+    authorization: str | None = Header(default=None),
     db: Session = Depends(get_db),
 ):
     """Add a new movie to the user's list."""
@@ -112,7 +112,7 @@ def add_movie(
 @router.post("/watched/{movie_id}", response_model=Movie, status_code=200)
 def set_watched(
     movie_id: int,
-    authorization: str | None = None,
+    authorization: str | None = Header(default=None),
     db: Session = Depends(get_db),
 ):
     """Mark a movie as watched."""
@@ -139,7 +139,7 @@ def set_watched(
 def set_rating(
     movie_id: int,
     rating_data: dict,
-    authorization: str | None = None,
+    authorization: str | None = Header(default=None),
     db: Session = Depends(get_db),
 ):
     """Set a rating for a movie (0-5)."""
@@ -180,7 +180,7 @@ def set_rating(
 @router.delete("/{movie_id}", status_code=204)
 def delete_movie(
     movie_id: int,
-    authorization: str | None = None,
+    authorization: str | None = Header(default=None),
     db: Session = Depends(get_db),
 ):
     """Delete a movie from the user's list."""
