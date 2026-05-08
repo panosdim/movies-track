@@ -1,3 +1,5 @@
+"""Password hashing and verification utilities using bcrypt."""
+
 import bcrypt
 
 

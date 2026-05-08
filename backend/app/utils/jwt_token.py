@@ -1,3 +1,5 @@
+"""JWT token utilities for authentication and token management."""
+
 import os
 from datetime import datetime, timedelta, timezone
 import jwt

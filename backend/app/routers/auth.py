@@ -1,3 +1,5 @@
+"""Authentication router for user registration and login."""
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 

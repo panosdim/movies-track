@@ -1,7 +1,11 @@
+"""Pydantic schemas for movie data validation and serialization."""
+
 from pydantic import BaseModel, Field
 
 
 class MovieProviderSchema(BaseModel):
+    """Schema for streaming provider information."""
+
     logo_path: str | None = None
     provider_name: str | None = None
 
@@ -9,6 +13,8 @@ class MovieProviderSchema(BaseModel):
 
 
 class MovieBase(BaseModel):
+    """Base schema for movie data."""
+
     movie_id: int | None = None
     poster: str | None = None
     rating: int | None = Field(default=None, ge=0, le=5)
@@ -18,10 +24,12 @@ class MovieBase(BaseModel):
 
 
 class MovieCreate(MovieBase):
-    pass
+    """Schema for creating a new movie."""
 
 
 class MovieUpdate(BaseModel):
+    """Schema for updating an existing movie."""
+
     movie_id: int | None = None
     poster: str | None = None
     rating: int | None = Field(default=None, ge=0, le=5)
@@ -31,6 +39,8 @@ class MovieUpdate(BaseModel):
 
 
 class Movie(MovieBase):
+    """Complete movie schema with database ID and provider information."""
+
     id: int
     providers: list[MovieProviderSchema] = []
 

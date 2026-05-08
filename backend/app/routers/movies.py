@@ -1,3 +1,5 @@
+"""Movies router for managing user movie lists, watchlist, and ratings."""
+
 from fastapi import APIRouter, Depends, Header, HTTPException, status
 from sqlalchemy.orm import Session
 
@@ -21,11 +23,11 @@ def get_current_user_email(authorization: str | None = Header(default=None)) -> 
         scheme, token = authorization.split()
         if scheme.lower() != "bearer":
             raise ValueError("Invalid scheme")
-    except ValueError:
+    except ValueError as exc:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid authorization header format",
-        )
+        ) from exc
 
     payload = verify_token(token)
     if not payload:
@@ -53,7 +55,7 @@ def get_watched_movies(
     user_email = get_current_user_email(authorization)
     movies = (
         db.query(MovieModel)
-        .filter(MovieModel.user_id == user_email, MovieModel.watched == True)
+        .filter(MovieModel.user_id == user_email, MovieModel.watched.is_(True))
         .all()
     )
     return movies
@@ -70,7 +72,7 @@ def get_watchlist(
         db.query(MovieModel)
         .filter(
             MovieModel.user_id == user_email,
-            (MovieModel.watched == False) | (MovieModel.watched.is_(None)),
+            MovieModel.watched.isnot(True) | MovieModel.watched.is_(None),
         )
         .all()
     )

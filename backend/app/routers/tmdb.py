@@ -1,3 +1,5 @@
+"""TMDb API router for movie search, autocomplete, and popular movies."""
+
 import os
 import httpx
 from fastapi import APIRouter, HTTPException, status
@@ -37,7 +39,7 @@ def search_movies(search_data: dict):
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
             detail=f"TMDb API error: {str(e)}",
-        )
+        ) from e
 
 
 @router.post("/autocomplete")
@@ -84,7 +86,7 @@ def autocomplete_movies(search_data: dict):
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
             detail=f"TMDb API error: {str(e)}",
-        )
+        ) from e
 
 
 @router.get("/popular")
@@ -108,4 +110,4 @@ def get_popular_movies():
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
             detail=f"TMDb API error: {str(e)}",
-        )
+        ) from e

@@ -58,7 +58,8 @@
         "username": "panosdim",
         "password": "Test1!"
       }
-    ]
+    ],
+    "powershell.cwd": "Root"
   },
   "extensions": {
     "recommendations": [

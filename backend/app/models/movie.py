@@ -1,10 +1,14 @@
+"""Movie and MovieProvider models for storing movie data and streaming availability."""
+
 from sqlalchemy import BigInteger, Boolean, ForeignKey, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
 
 
-class MovieProvider(Base):
+class MovieProvider(Base):  # pylint: disable=too-few-public-methods
+    """Streaming provider information for movies."""
+
     __tablename__ = "movie_providers"
 
     # Composite PK not defined in the DDL — use movie_id + provider_name as natural key.
@@ -20,7 +24,9 @@ class MovieProvider(Base):
     movie: Mapped["Movie"] = relationship("Movie", back_populates="providers")
 
 
-class Movie(Base):
+class Movie(Base):  # pylint: disable=too-few-public-methods
+    """Movie model with user tracking, ratings, and streaming provider information."""
+
     __tablename__ = "movie"
 
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True)

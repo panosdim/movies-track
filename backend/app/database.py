@@ -1,3 +1,5 @@
+"""Database configuration and session management."""
+
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
@@ -20,16 +22,16 @@ DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NA
 
 engine = create_engine(DATABASE_URL)
 
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+SESSIONLOCAL = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
-class Base(DeclarativeBase):
-    pass
+class Base(DeclarativeBase):  # pylint: disable=too-few-public-methods
+    """SQLAlchemy declarative base for all model classes."""
 
 
 def get_db():
     """FastAPI dependency that provides a DB session per request."""
-    db = SessionLocal()
+    db = SESSIONLOCAL()
     try:
         yield db
     finally:
