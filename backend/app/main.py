@@ -1,20 +1,41 @@
+"""FastAPI application entrypoint for the Movies Track backend."""
+
 import logging
 from fastapi import FastAPI
+from fastapi.concurrency import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
+from app.database import engine
 from app.routers import auth, movies, tmdb
 
 load_dotenv()
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# Use Uvicorn's logger for application info and error logging
+logger = logging.getLogger("uvicorn.error")
+
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    """Log application lifespan events."""
+
+    logger.info("Starting up API...")
+    try:
+        with engine.connect():
+            logger.info("Database connection successful")
+    except Exception as exception:
+        logger.error("Database connection failed: %s", exception)
+        raise
+
+    yield
+    logger.info("Shutting down API...")
+
 
 app = FastAPI(
     title="Movies Recommendations API",
     description="Backend API for movie recommendations",
     version="0.1.0",
+    lifespan=lifespan,
 )
 
 app.add_middleware(
@@ -29,20 +50,6 @@ app.add_middleware(
 app.include_router(auth.router, prefix="/api/v1")
 app.include_router(movies.router, prefix="/api/v1")
 app.include_router(tmdb.router, prefix="/api/v1")
-
-
-@app.on_event("startup")
-async def startup_event():
-    """Log startup information."""
-    logger.info("Application startup complete")
-    try:
-        from app.database import engine
-        # Test database connection
-        with engine.connect() as conn:
-            logger.info("Database connection successful")
-    except Exception as e:
-        logger.error(f"Database connection failed: {e}")
-        raise
 
 
 @app.get("/api/v1/health")
