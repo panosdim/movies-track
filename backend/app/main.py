@@ -7,7 +7,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 
 from app.database import engine
-from app.routers import auth, movies, tmdb
+from app.routers import auth, movies, tmdb, recommender
+from app.recommender.model_utils import start_background_threads
 
 load_dotenv()
 
@@ -23,9 +24,15 @@ async def lifespan(_app: FastAPI):
     try:
         with engine.connect():
             logger.info("Database connection successful")
-    except Exception as exception:
+    except (IOError, OSError, RuntimeError) as exception:
         logger.error("Database connection failed: %s", exception)
         raise
+
+    # Start recommender background threads (training worker + daily scheduler)
+    try:
+        start_background_threads()
+    except (ImportError, RuntimeError, AttributeError) as e:
+        logger.warning("Failed to start recommender background threads: %s", e)
 
     yield
     logger.info("Shutting down API...")
@@ -50,6 +57,7 @@ app.add_middleware(
 app.include_router(auth.router, prefix="/api/v1")
 app.include_router(movies.router, prefix="/api/v1")
 app.include_router(tmdb.router, prefix="/api/v1")
+app.include_router(recommender.router, prefix="/api/v1")
 
 
 @app.get("/api/v1/health")

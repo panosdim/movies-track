@@ -1,6 +1,8 @@
-"""TMDb API router for movie search, autocomplete, and popular movies."""
+"""TMDb API router for movie search, autocomplete, popular movies, and recommender utilities."""
 
+import logging
 import os
+
 import httpx
 from fastapi import APIRouter, HTTPException, status
 
@@ -8,6 +10,68 @@ router = APIRouter(tags=["tmdb"])
 
 TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 TMDB_BASE_URL = "https://api.themoviedb.org/3"
+
+_logger = logging.getLogger(__name__)
+
+
+def fetch_movie_details(tmdb_id):
+    """Fetch detailed movie information from TMDb for the given TMDb ID."""
+    url = f"{TMDB_BASE_URL}/movie/{tmdb_id}?append_to_response=credits"
+    try:
+        with httpx.Client() as client:
+            response = client.get(
+                url,
+                headers={"Authorization": f"Bearer {TMDB_API_KEY}"},
+            )
+            response.raise_for_status()
+            data = response.json()
+
+            return {
+                "genres": [genre["name"] for genre in data.get("genres", [])],
+                "release_year": int(data.get("release_date", "0000").split("-")[0]),
+                "duration": data.get("runtime", 0),
+                "popularity": data.get("popularity", 0),
+                "average_rating": data.get("vote_average", 0),
+                "actors": [
+                    cast["name"] for cast in data.get("credits", {}).get("cast", [])[:5]
+                ],
+                "director": [
+                    crew["name"]
+                    for crew in data.get("credits", {}).get("crew", [])
+                    if crew["job"] == "Director"
+                ],
+            }
+    except httpx.HTTPError:
+        _logger.error("Failed to fetch data for TMDb ID: %s", tmdb_id)
+        return None
+
+
+def fetch_new_releases(page=1):
+    """Fetch new movie releases from TMDb."""
+    url = f"{TMDB_BASE_URL}/movie/now_playing"
+    try:
+        with httpx.Client() as client:
+            response = client.get(
+                url,
+                params={"page": page},
+                headers={"Authorization": f"Bearer {TMDB_API_KEY}"},
+            )
+            response.raise_for_status()
+            data = response.json()
+
+            return [
+                {
+                    "poster_path": movie.get("poster_path", ""),
+                    "release_date": movie.get("release_date", ""),
+                    "id": movie.get("id"),
+                    "title": movie.get("title", ""),
+                    "score": movie.get("vote_average"),
+                }
+                for movie in data.get("results", [])
+            ]
+    except httpx.HTTPError:
+        _logger.error("Failed to fetch new releases for page %s", page)
+        return None
 
 
 @router.post("/search")

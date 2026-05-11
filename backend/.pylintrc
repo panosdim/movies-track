@@ -1,0 +1,10 @@
+[MASTER]
+# Tells pylint to trust the tensorflow binary/extension
+extension-pkg-whitelist=tensorflow
+
+[MESSAGES CONTROL]
+# Disable specific "no-name-in-module" just for tensorflow
+disable=import-error, no-name-in-module, too-many-arguments, too-many-locals, too-many-positional-arguments
+
+[FORMAT]
+max-line-length=120

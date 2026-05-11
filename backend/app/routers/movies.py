@@ -1,49 +1,19 @@
 """Movies router for managing user movie lists, watchlist, and ratings."""
 
+import logging
+
 from fastapi import APIRouter, Depends, Header, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models.movie import Movie as MovieModel
 from app.schemas.movie import Movie
-from app.utils.jwt_token import verify_token
+from app.utils.security import get_current_user_email
+from app.recommender.model_utils import process_training_request
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/movies", tags=["movies"])
-
-
-def get_current_user_email(authorization: str | None = Header(default=None)) -> str:
-    """Extract and verify user email from Bearer token."""
-    if not authorization:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Missing authorization header",
-        )
-
-    try:
-        scheme, token = authorization.split()
-        if scheme.lower() != "bearer":
-            raise ValueError("Invalid scheme")
-    except ValueError as exc:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid authorization header format",
-        ) from exc
-
-    payload = verify_token(token)
-    if not payload:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid or expired token",
-        )
-
-    user_email = payload.get("sub")
-    if not user_email:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token payload",
-        )
-
-    return user_email
 
 
 @router.get("/watched", response_model=list[Movie])
@@ -108,6 +78,12 @@ def add_movie(
     db.add(new_movie)
     db.commit()
     db.refresh(new_movie)
+
+    try:
+        process_training_request(user_email)
+    except (RuntimeError, ValueError, IOError) as e:
+        logger.error("Error triggering retrain after add_movie: %s", e)
+
     return new_movie
 
 
@@ -176,6 +152,12 @@ def set_rating(
     movie.rating = rating
     db.commit()
     db.refresh(movie)
+
+    try:
+        process_training_request(user_email)
+    except (RuntimeError, ValueError, IOError) as e:
+        logger.error("Error triggering retrain after set_rating: %s", e)
+
     return movie
 
 
@@ -198,6 +180,11 @@ def delete_movie(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Movie not found",
         )
+
+    try:
+        process_training_request(user_email)
+    except (RuntimeError, ValueError, IOError) as e:
+        logger.error("Error triggering retrain after delete_movie: %s", e)
 
     db.delete(movie)
     db.commit()

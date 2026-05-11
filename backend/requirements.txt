@@ -29,3 +29,9 @@ email-validator>=2.0
 
 # HTTP client
 httpx>=0.24
+
+# ML Recommender
+tensorflow==2.20.0
+numpy<=2.3.2
+pandas~=2.3.2
+schedule~=1.2.2
