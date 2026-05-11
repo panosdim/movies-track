@@ -7,9 +7,9 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from typing import List
 
-logger = logging.getLogger(__name__)
+from app.utils.tmdb import TMDB_IMAGE_BASE_URL
 
-TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500"
+logger = logging.getLogger(__name__)
 
 MAIL_HOST = os.getenv("MAIL_HOST", "smtp.gmail.com")
 MAIL_PORT = int(os.getenv("MAIL_PORT", "587"))

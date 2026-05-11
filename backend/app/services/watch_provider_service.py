@@ -1,15 +1,12 @@
 """Watch provider info service for fetching and managing streaming providers from TMDb."""
 
 import logging
-import os
 
 import httpx
 
-logger = logging.getLogger(__name__)
+from app.utils.tmdb import TMDB_API_KEY, TMDB_BASE_URL
 
-TMDB_API_KEY = os.getenv("TMDB_API_KEY")
-TMDB_BASE_URL = "https://api.themoviedb.org/3"
-TMDB_IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500"
+logger = logging.getLogger(__name__)
 
 # Cached flatrate (subscription) providers for GR region
 _flatrate_providers_cache = None

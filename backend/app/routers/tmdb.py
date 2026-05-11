@@ -1,15 +1,13 @@
 """TMDb API router for movie search, autocomplete, popular movies, and recommender utilities."""
 
 import logging
-import os
 
 import httpx
 from fastapi import APIRouter, HTTPException, status
 
-router = APIRouter(tags=["tmdb"])
+from app.utils.tmdb import TMDB_API_KEY, TMDB_BASE_URL
 
-TMDB_API_KEY = os.getenv("TMDB_API_KEY")
-TMDB_BASE_URL = "https://api.themoviedb.org/3"
+router = APIRouter(tags=["tmdb"])
 
 _logger = logging.getLogger(__name__)
 

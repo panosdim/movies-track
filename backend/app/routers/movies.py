@@ -1,7 +1,6 @@
 """Movies router for managing user movie lists, watchlist, and ratings."""
 
 import logging
-import os
 
 import httpx
 from fastapi import APIRouter, Depends, Header, HTTPException, status
@@ -11,15 +10,13 @@ from app.database import get_db
 from app.models.movie import Movie as MovieModel, MovieProvider
 from app.schemas.movie import Movie
 from app.utils.security import get_current_user_email
+from app.utils.tmdb import TMDB_API_KEY, TMDB_BASE_URL
 from app.recommender.model_utils import process_training_request
 from app.services.watch_provider_service import fetch_watch_providers
 
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/movies", tags=["movies"])
-
-TMDB_API_KEY = os.getenv("TMDB_API_KEY")
-TMDB_BASE_URL = "https://api.themoviedb.org/3"
 
 
 @router.get("/watched", response_model=list[Movie])
