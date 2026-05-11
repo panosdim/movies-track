@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 from app.database import engine
 from app.routers import auth, movies, tmdb, recommender
 from app.recommender.model_utils import start_background_threads
+from app.services.watch_provider_scheduler import start_provider_scheduler
 
 load_dotenv()
 
@@ -33,6 +34,12 @@ async def lifespan(_app: FastAPI):
         start_background_threads()
     except (ImportError, RuntimeError, AttributeError) as e:
         logger.warning("Failed to start recommender background threads: %s", e)
+
+    # Start watch provider change checker (daily midnight)
+    try:
+        start_provider_scheduler()
+    except RuntimeError as e:
+        logger.warning("Failed to start provider scheduler: %s", e)
 
     yield
     logger.info("Shutting down API...")

@@ -43,5 +43,6 @@ class Movie(MovieBase):
 
     id: int
     providers: list[MovieProviderSchema] = []
+    vote_average: float | None = None
 
     model_config = {"from_attributes": True}
