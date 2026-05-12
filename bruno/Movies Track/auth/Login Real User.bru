@@ -1,0 +1,29 @@
+meta {
+  name: Login Real User
+  type: http
+  seq: 9
+}
+
+post {
+  url: {{url}}/login
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "email": "panosdim@gmail.com",
+      "password": "netrino1!"
+  }
+}
+
+script:post-response {
+  test("Status code is 200", function () {
+      expect(res.getStatus()).to.equal(200);
+  });
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

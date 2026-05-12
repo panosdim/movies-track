@@ -47,7 +47,7 @@ async def lifespan(_app: FastAPI):
 
 app = FastAPI(
     title="Movies Recommendations API",
-    description="Backend API for movie recommendations",
+    description="Backend API for movie recommendations and tracking",
     version="0.1.0",
     lifespan=lifespan,
 )

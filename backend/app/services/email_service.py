@@ -33,15 +33,29 @@ def _create_single_movie_html(movie: dict) -> str:
                 logo_url = f"{TMDB_IMAGE_BASE_URL}{provider['logo_path']}"
             provider_name = provider.get("provider_name", "Unknown")
             if logo_url:
-                providers_html += f'<img src="{logo_url}" alt="{provider_name}" style="height: 30px; margin: 5px;" />'
+                providers_html += (
+                    f'<img src="{logo_url}" alt="{provider_name}" '
+                    'style="height: 30px; margin: 5px;" />'
+                )
             else:
-                providers_html += f'<span style="margin: 5px; padding: 5px 10px; background: #333; color: white; border-radius: 3px; font-size: 12px;">{provider_name}</span>'
+                span_style = (
+                    'style="margin: 5px; padding: 5px 10px; background: #333; '
+                    'color: white; border-radius: 3px; font-size: 12px;"'
+                )
+                providers_html += f"<span {span_style}>{provider_name}</span>"
         providers_html += "</div>"
 
     return f"""
     <div style="margin-bottom: 30px; padding: 15px; border: 1px solid #ddd; border-radius: 5px;">
-        <h3 style="margin: 0 0 10px 0;">{movie.get('title', 'Unknown Movie')}</h3>
-        {f'<img src="{poster_url}" alt="{movie.get("title", "")}" style="max-width: 200px; border-radius: 5px;" />' if poster_url else ''}
+        <h3 style="margin: 0 0 10px 0;">{movie.get("title", "Unknown Movie")}</h3>
+        {
+        (
+            f'<img src="{poster_url}" alt="{movie.get("title", "")}" '
+            'style="max-width: 200px; border-radius: 5px;" />'
+        )
+        if poster_url
+        else ""
+    }
         {providers_html}
     </div>
     """
@@ -78,7 +92,9 @@ def send_notification(user_email: str, movie: dict) -> bool:
             server.login(MAIL_USERNAME, MAIL_PASSWORD)
             server.send_message(msg)
 
-        logger.info("Sent notification email to %s for movie %s", user_email, movie.get("title"))
+        logger.info(
+            "Sent notification email to %s for movie %s", user_email, movie.get("title")
+        )
         return True
 
     except (smtplib.SMTPException, ConnectionError, OSError) as e:
@@ -110,7 +126,10 @@ def send_summary_notification(user_email: str, movies: List[dict]) -> bool:
                 <h2 style="color: #333;">Watchlist Update</h2>
                 <p>The following movies have new streaming providers available:</p>
                 {movies_html}
-                <p style="color: #666; font-size: 12px;">You're receiving this email because you have these movies in your watchlist.</p>
+                <p style="color: #666; font-size: 12px;">
+                  You're receiving this email because you have these movies
+                  in your watchlist.
+                </p>
             </div>
         </body>
         </html>
