@@ -19,5 +19,19 @@ services:
       timeout: 5s
       retries: 5
 
+  api:
+    image: ghcr.io/panosdim/movies-track
+    container_name: movies-track-api
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    ports:
+      - "8004:8000"
+    volumes:
+      - ./models:/app/models
+    depends_on:
+      db:
+        condition: service_healthy
+
 volumes:
   postgres_data:
