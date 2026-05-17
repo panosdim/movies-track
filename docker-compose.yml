@@ -1,15 +1,16 @@
 services:
   db:
     image: postgres:17-alpine
+    container_name: movies-track-db
     restart: unless-stopped
     env_file:
-      - ./backend/.env
+      - .env
     environment:
       POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "${DB_PORT:-5433}:5432"
+      - "${DB_PORT_MAP:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./docker/initdb:/docker-entrypoint-initdb.d:ro
@@ -24,9 +25,9 @@ services:
     container_name: movies-track-api
     restart: unless-stopped
     env_file:
-      - ./backend/.env
+      - .env
     ports:
-      - "8004:8000"
+      - "${API_PORT:-8000}:8000"
     volumes:
       - ./models:/app/models
     depends_on:

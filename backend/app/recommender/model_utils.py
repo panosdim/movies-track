@@ -27,26 +27,8 @@ from app.routers.tmdb import fetch_movie_details, fetch_new_releases
 _logger = logging.getLogger(__name__)
 
 
-def get_models_dir():
-    """Get models directory with multiple fallbacks"""
-    env_dir = os.getenv("MODELS_DIR")
-    if env_dir:
-        return env_dir
-
-    container_path = "/app/models"
-    try:
-        if os.path.exists("/app"):
-            os.makedirs(container_path, exist_ok=True)
-            return container_path
-    except PermissionError:
-        pass
-
-    local_path = os.path.join(os.getcwd(), "models")
-    return local_path
-
-
-MODELS_DIR = get_models_dir()
-
+# Models are expected to be mounted into the container at /app/recommender/models.
+MODELS_DIR = os.path.join(os.path.dirname(__file__), "models")
 os.makedirs(MODELS_DIR, exist_ok=True)
 
 # Training queue and worker setup

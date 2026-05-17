@@ -25,6 +25,7 @@ async def suggestions(
     """Get personalized movie suggestions for the authenticated user."""
     user_id = get_current_user_email(authorization)
     model_path = get_model_path(user_id)
+
     if not model_path or not os.path.exists(model_path):
         logger.info(
             "No model found for user %s. Returning generic new releases.", user_id

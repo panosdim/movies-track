@@ -13,36 +13,44 @@ from app.services.watch_provider_scheduler import start_provider_scheduler
 
 load_dotenv()
 
-# Use Uvicorn's logger for application info and error logging
-logger = logging.getLogger("uvicorn.error")
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[logging.StreamHandler()],
+)
+
+# Get logger for this module
+_logger = logging.getLogger(__name__)
+_logger.debug("Logging is configured.")
 
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     """Log application lifespan events."""
 
-    logger.info("Starting up API...")
+    _logger.info("Starting up API...")
     try:
         with engine.connect():
-            logger.info("Database connection successful")
+            _logger.info("Database connection successful")
     except (IOError, OSError, RuntimeError) as exception:
-        logger.error("Database connection failed: %s", exception)
+        _logger.error("Database connection failed: %s", exception)
         raise
 
     # Start recommender background threads (training worker + daily scheduler)
     try:
         start_background_threads()
     except (ImportError, RuntimeError, AttributeError) as e:
-        logger.warning("Failed to start recommender background threads: %s", e)
+        _logger.warning("Failed to start recommender background threads: %s", e)
 
     # Start watch provider change checker (daily midnight)
     try:
         start_provider_scheduler()
     except RuntimeError as e:
-        logger.warning("Failed to start provider scheduler: %s", e)
+        _logger.warning("Failed to start provider scheduler: %s", e)
 
     yield
-    logger.info("Shutting down API...")
+    _logger.info("Shutting down API...")
 
 
 app = FastAPI(

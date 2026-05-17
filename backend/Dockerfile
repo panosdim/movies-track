@@ -18,7 +18,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 COPY --from=builder /install /usr/local
 
-COPY backend/ .
+# Copy only the application code needed at runtime.
+COPY backend/app ./app
 
 EXPOSE 8000
 
