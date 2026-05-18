@@ -1,10 +1,18 @@
 export interface Movie {
   id: number;
-  title: string;
-  genre: string;
+  poster: string | null;
+  movieId: number;
+  title: string | null;
+  watched: boolean | null;
   rating: number;
-  description?: string;
+  userScore: number | null;
+  watchInfo: WatchProvider[];
 }
+
+export type WatchProvider = {
+  providerName: String | null;
+  logoPath: String | null;
+};
 
 export interface MovieCreate {
   title: string;

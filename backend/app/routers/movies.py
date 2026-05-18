@@ -53,15 +53,18 @@ def get_watchlist(
     )
 
     # Enrich with TMDb voteAverage if API key is configured
+    vote_averages: dict[int, float] = {}
     if TMDB_API_KEY:
         tmdb_ids = [m.movie_id for m in movies if m.movie_id]
         if tmdb_ids:
             vote_averages = _fetch_vote_averages(tmdb_ids)
-            for movie in movies:
-                if movie.movie_id and movie.movie_id in vote_averages:
-                    movie.vote_average = vote_averages[movie.movie_id]
 
-    return movies
+    return [
+        Movie.model_validate(movie).model_copy(
+            update={"vote_average": vote_averages.get(movie.movie_id) if movie.movie_id else None}
+        )
+        for movie in movies
+    ]
 
 
 def _fetch_vote_averages(tmdb_ids: list) -> dict:

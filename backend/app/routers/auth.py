@@ -5,35 +5,36 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models.user import AppUser
-from app.schemas.auth import RegisterRequest, LoginRequest, LoginResponse
-from app.utils.password import hash_password, verify_password
+from app.utils.password import verify_password
+from app.schemas.auth import LoginRequest, LoginResponse
 from app.utils.jwt_token import create_access_token
 from app.utils.security import get_current_user_email
 
 router = APIRouter(tags=["auth"])
 
 
-@router.post("/register", status_code=204)
-def register(request: RegisterRequest, db: Session = Depends(get_db)):
-    """Register a new user."""
-    # Check if user already exists
-    existing_user = db.query(AppUser).filter(AppUser.email == request.email).first()
-    if existing_user:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email already registered",
-        )
+# remove in production - only for testing
+# @router.post("/register", status_code=204)
+# def register(request: RegisterRequest, db: Session = Depends(get_db)):
+#     """Register a new user."""
+#     # Check if user already exists
+#     existing_user = db.query(AppUser).filter(AppUser.email == request.email).first()
+#     if existing_user:
+#         raise HTTPException(
+#             status_code=status.HTTP_400_BAD_REQUEST,
+#             detail="Email already registered",
+#         )
 
-    # Create new user
-    hashed_password = hash_password(request.password)
-    new_user = AppUser(
-        email=request.email,
-        password=hashed_password,
-        first_name=request.first_name,
-        last_name=request.last_name,
-    )
-    db.add(new_user)
-    db.commit()
+#     # Create new user
+#     hashed_password = hash_password(request.password)
+#     new_user = AppUser(
+#         email=request.email,
+#         password=hashed_password,
+#         first_name=request.first_name,
+#         last_name=request.last_name,
+#     )
+#     db.add(new_user)
+#     db.commit()
 
 
 @router.post("/login", response_model=LoginResponse)

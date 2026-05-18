@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, tap, catchError, of, map } from 'rxjs';
+import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 
 export interface MeResponse {
@@ -20,6 +21,7 @@ export type LoginResponse = MeResponse;
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly http = inject(HttpClient);
+  private readonly router = inject(Router);
 
   /** In-memory token storage — cleared on page refresh. */
   private token: string | null = null;
@@ -34,6 +36,14 @@ export class AuthService {
 
   clearToken(): void {
     this.token = null;
+  }
+
+  /**
+   * Clears the stored token and redirects to the login page.
+   */
+  logout(): void {
+    this.clearToken();
+    this.router.navigateByUrl('/login');
   }
 
   /**
