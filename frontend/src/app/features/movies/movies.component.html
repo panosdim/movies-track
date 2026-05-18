@@ -11,11 +11,7 @@
 
   <div class="movies-grid">
     @for (movie of movies(); track movie.id) {
-      <p-card [header]="movie.title" styleClass="movie-card">
-        <ng-template #subtitle>
-          <p-tag [value]="movie.genre" severity="info" />
-        </ng-template>
-        <p>{{ movie.description }}</p>
+      <p-card [header]="movie.title || 'Untitled'" styleClass="movie-card">
         <ng-template #footer>
           <p-rating [(ngModel)]="movie.rating" [readonly]="true" />
         </ng-template>

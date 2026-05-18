@@ -1,17 +1,17 @@
 export interface TmdbMovie {
   id: number;
   title: string;
-  poster_path: string | null;
-  release_date: string;
-  vote_average: number;
+  posterPath: string | null;
+  releaseDate: string;
+  voteAverage: number;
   popularity: number;
   overview: string;
-  genre_ids: number[];
+  genreIds: number[];
 }
 
 export interface TmdbPopularResponse {
   page: number;
   results: TmdbMovie[];
-  total_pages: number;
-  total_results: number;
+  totalPages: number;
+  totalResults: number;
 }

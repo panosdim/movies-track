@@ -4,14 +4,14 @@ export interface Movie {
   movieId: number;
   title: string | null;
   watched: boolean | null;
-  rating: number;
-  userScore: number | null;
-  watchInfo: WatchProvider[];
+  rating: number | null;
+  providers: WatchProvider[];
+  voteAverage: number;
 }
 
 export type WatchProvider = {
-  providerName: String | null;
-  logoPath: String | null;
+  providerName: string | null;
+  logoPath: string | null;
 };
 
 export interface MovieCreate {
