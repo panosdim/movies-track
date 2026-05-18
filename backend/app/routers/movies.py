@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session, joinedload
 
 from app.database import get_db
 from app.models.movie import Movie as MovieModel, MovieProvider
-from app.schemas.movie import Movie
+from app.schemas.movie import Movie, MovieResponse
 from app.utils.security import get_current_user_email
 from app.utils.tmdb import TMDB_API_KEY, TMDB_BASE_URL
 from app.recommender.model_utils import process_training_request
@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/movies", tags=["movies"])
 
 
-@router.get("/watched", response_model=list[Movie], response_model_exclude={"user_id"})
+@router.get("/watched", response_model=list[MovieResponse])
 def get_watched_movies(
     authorization: str | None = Header(default=None),
     db: Session = Depends(get_db),
@@ -37,7 +37,7 @@ def get_watched_movies(
 
 
 @router.get(
-    "/watchlist", response_model=list[Movie], response_model_exclude={"user_id"}
+    "/watchlist", response_model=list[MovieResponse]
 )
 def get_watchlist(
     authorization: str | None = Header(default=None),

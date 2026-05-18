@@ -38,6 +38,21 @@ class MovieUpdate(BaseModel):
     watched: bool | None = None
 
 
+class MovieResponse(BaseModel):
+    """Movie schema for API responses (excludes user_id)."""
+
+    id: int
+    movie_id: int | None = None
+    poster: str | None = None
+    rating: int | None = Field(default=None, ge=0, le=5)
+    title: str | None = Field(default=None, max_length=255)
+    watched: bool | None = None
+    providers: list[MovieProviderSchema] = []
+    vote_average: float | None = None
+
+    model_config = {"from_attributes": True}
+
+
 class Movie(MovieBase):
     """Complete movie schema with database ID and provider information."""
 
