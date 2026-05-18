@@ -6,6 +6,9 @@ export const environmentBase = {
   loginUrl() {
     return this.apiUrl + '/login';
   },
+  meUrl() {
+    return this.apiUrl + '/me';
+  },
   popularUrl() {
     return this.apiUrl + '/popular';
   },

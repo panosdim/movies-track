@@ -1,0 +1,98 @@
+<p-toast position="top-right" />
+
+<div class="login-container">
+  <!-- Left panel: movie poster grid -->
+  <div class="login-left">
+    @if (posters().length === 0) {
+      <div class="movie-grid loading">
+        <i class="pi pi-spin pi-spinner" style="font-size: 3rem; color: var(--p-primary-color)"></i>
+      </div>
+    }
+
+    @if (posters().length > 0) {
+      <div class="movie-grid">
+        @for (movie of posters(); track movie.id) {
+          @if (movie.poster_path) {
+            <a
+              href="https://www.themoviedb.org/movie/{{ movie.id }}"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                class="movie-poster"
+                [src]="imageBaseUrl + movie.poster_path"
+                [alt]="movie.title"
+                loading="lazy"
+              />
+            </a>
+          }
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Right panel: login card -->
+  <div class="login-right">
+    <p-card class="login-card">
+      <div class="login-header">
+        <img src="assets/icons/icon-128x128.png" alt="Movies Track logo" class="login-logo" />
+        <h2 class="login-title">Movies Track</h2>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="login-form">
+        <p-floatlabel>
+          <input
+            pInputText
+            type="email"
+            id="email"
+            placeholder="Email"
+            formControlName="email"
+            [invalid]="isInvalid('email')"
+            fluid
+          />
+          <label for="email">Email</label>
+          @if (isInvalid('email')) {
+            @if (hasError('email')?.['email']) {
+              <p-message severity="error" size="small" variant="simple">
+                Enter a valid email address.
+              </p-message>
+            }
+            @if (hasError('email')?.['required']) {
+              <p-message severity="error" size="small" variant="simple">
+                Email is required.
+              </p-message>
+            }
+          }
+        </p-floatlabel>
+
+        <p-floatlabel>
+          <p-password
+            inputId="password"
+            formControlName="password"
+            placeholder="Password"
+            [feedback]="false"
+            [toggleMask]="true"
+            [invalid]="isInvalid('password')"
+            fluid
+          />
+          <label for="password">Password</label>
+          @if (isInvalid('password')) {
+            @if (hasError('password')?.['required']) {
+              <p-message severity="error" size="small" variant="simple">
+                Password is required.
+              </p-message>
+            }
+          }
+        </p-floatlabel>
+
+        <p-button
+          type="submit"
+          label="Login"
+          icon="pi pi-sign-in"
+          [loading]="isLoginInProgress()"
+          [disabled]="isLoginInProgress()"
+        />
+      </form>
+    </p-card>
+  </div>
+</div>
