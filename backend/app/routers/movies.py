@@ -4,6 +4,7 @@ import logging
 
 import httpx
 from fastapi import APIRouter, Depends, Header, HTTPException, status
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session, joinedload
 
 from app.database import get_db
@@ -19,7 +20,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/movies", tags=["movies"])
 
 
-@router.get("/watched", response_model=list[Movie])
+@router.get("/watched", response_model=list[Movie], response_model_exclude={"user_id"})
 def get_watched_movies(
     authorization: str | None = Header(default=None),
     db: Session = Depends(get_db),
@@ -35,7 +36,9 @@ def get_watched_movies(
     return movies
 
 
-@router.get("/watchlist", response_model=list[Movie])
+@router.get(
+    "/watchlist", response_model=list[Movie], response_model_exclude={"user_id"}
+)
 def get_watchlist(
     authorization: str | None = Header(default=None),
     db: Session = Depends(get_db),
@@ -61,7 +64,11 @@ def get_watchlist(
 
     return [
         Movie.model_validate(movie).model_copy(
-            update={"vote_average": vote_averages.get(movie.movie_id) if movie.movie_id else None}
+            update={
+                "vote_average": vote_averages.get(movie.movie_id)
+                if movie.movie_id
+                else None
+            }
         )
         for movie in movies
     ]
@@ -85,7 +92,9 @@ def _fetch_vote_averages(tmdb_ids: list) -> dict:
     return results
 
 
-@router.post("/", response_model=Movie, status_code=200)
+@router.post(
+    "/", response_model=Movie, status_code=200, response_model_exclude={"user_id"}
+)
 def add_movie(
     movie_data: dict,
     authorization: str | None = Header(default=None),
@@ -129,8 +138,10 @@ def add_movie(
                 db.add(new_provider)
             db.commit()
             db.refresh(new_movie)
-        except Exception as e:
-            logger.error("Failed to fetch watch providers for movie %s: %s", tmdb_movie_id, e)
+        except (httpx.HTTPError, SQLAlchemyError) as e:
+            logger.error(
+                "Failed to fetch watch providers for movie %s: %s", tmdb_movie_id, e
+            )
 
     try:
         process_training_request(user_email)
@@ -140,7 +151,12 @@ def add_movie(
     return new_movie
 
 
-@router.post("/watched/{movie_id}", response_model=Movie, status_code=200)
+@router.post(
+    "/watched/{movie_id}",
+    response_model=Movie,
+    status_code=200,
+    response_model_exclude={"user_id"},
+)
 def set_watched(
     movie_id: int,
     authorization: str | None = Header(default=None),
@@ -166,7 +182,12 @@ def set_watched(
     return movie
 
 
-@router.post("/rate/{movie_id}", response_model=Movie, status_code=200)
+@router.post(
+    "/rate/{movie_id}",
+    response_model=Movie,
+    status_code=200,
+    response_model_exclude={"user_id"},
+)
 def set_rating(
     movie_id: int,
     rating_data: dict,

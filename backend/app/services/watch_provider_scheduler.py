@@ -4,7 +4,9 @@ import logging
 import threading
 import time
 
+import httpx
 import schedule
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
 from app.database import SESSIONLOCAL
@@ -96,8 +98,7 @@ def check_watch_provider_changes():
         for user_email, movies in user_changes.items():
             try:
                 send_summary_notification(user_email, movies)
-            # pylint: disable=broad-except
-            except Exception as e:
+            except (SQLAlchemyError, httpx.HTTPError, RuntimeError) as e:
                 logger.error("Failed to send summary email to %s: %s", user_email, e)
 
         logger.info(
@@ -106,8 +107,7 @@ def check_watch_provider_changes():
             len(user_changes),
         )
 
-    # pylint: disable=broad-except
-    except Exception as e:
+    except (SQLAlchemyError, httpx.HTTPError) as e:
         logger.error("Error during provider check: %s", e)
         db.rollback()
     finally:
@@ -124,8 +124,7 @@ def clear_watched_providers():
             db.query(MovieProvider).filter(MovieProvider.movie_id == movie.id).delete()
         db.commit()
         logger.info("Cleared providers for %d watched movies", len(watched_movies))
-    # pylint: disable=broad-except
-    except Exception as e:
+    except SQLAlchemyError as e:
         logger.error("Error clearing watched providers: %s", e)
         db.rollback()
     finally:
