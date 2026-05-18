@@ -9,9 +9,9 @@
       </div>
     }
 
-    @if (posters().length > 0) {
+    @if (visiblePosters().length > 0) {
       <div class="movie-grid">
-        @for (movie of posters(); track movie.id) {
+        @for (movie of visiblePosters(); track movie.id) {
           @if (movie.poster_path) {
             <a
               href="https://www.themoviedb.org/movie/{{ movie.id }}"

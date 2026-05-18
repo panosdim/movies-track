@@ -1,4 +1,13 @@
-import { Component, OnInit, inject, signal, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  OnDestroy,
+  inject,
+  signal,
+  computed,
+  ElementRef,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -39,20 +48,36 @@ import { environment } from '../../../environments/environment';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly authService = inject(AuthService);
   private readonly popularMoviesService = inject(PopularMoviesService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly messageService = inject(MessageService);
-  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly el = inject(ElementRef);
 
   readonly imageBaseUrl = environment.imageBaseUrl + 'w500';
+
+  // Grid item dimensions (must match SCSS values)
+  private readonly POSTER_WIDTH = 180;
+  private readonly POSTER_HEIGHT = 260;
+  private readonly GAP = 24;
 
   posters = signal<TmdbMovie[]>([]);
   isLoginInProgress = signal(false);
   showPassword = false;
+
+  /** How many posters fit in the current grid area. */
+  private gridCapacity = signal(0);
+
+  /** Subset of posters that actually fits in the available space. */
+  readonly visiblePosters = computed(() => {
+    const capacity = this.gridCapacity();
+    return capacity > 0 ? this.posters().slice(0, capacity) : this.posters();
+  });
+
+  private resizeObserver: ResizeObserver | null = null;
 
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -63,24 +88,37 @@ export class LoginComponent implements OnInit {
     this.popularMoviesService.getPopularMovies().subscribe((data) => {
       this.posters.set(data.results);
     });
+  }
 
-    // Handle browser autofill by explicitly marking controls as touched and updating validity
-    // after a short delay to allow autofill to complete.
-    setTimeout(() => {
-      const emailControl = this.loginForm.get('email');
-      const passwordControl = this.loginForm.get('password');
+  ngAfterViewInit(): void {
+    // DOM is rendered here — clientWidth/clientHeight are valid.
+    const leftPanel: HTMLElement = this.el.nativeElement.querySelector('.login-left');
+    if (leftPanel) {
+      this.resizeObserver = new ResizeObserver(() => this.updateGridCapacity(leftPanel));
+      this.resizeObserver.observe(leftPanel);
+      this.updateGridCapacity(leftPanel);
+    }
+  }
 
-      // Check if controls have values (autofilled) and mark them as touched
-      if (emailControl && emailControl.value) {
-        emailControl.markAsTouched();
-        emailControl.updateValueAndValidity();
-      }
-      if (passwordControl && passwordControl.value) {
-        passwordControl.markAsTouched();
-        passwordControl.updateValueAndValidity();
-      }
-      this.cdr.detectChanges(); // Force change detection to update the button's disabled state
-    }, 500); // A small delay to ensure autofill has occurred
+  ngOnDestroy(): void {
+    this.resizeObserver?.disconnect();
+  }
+
+  private updateGridCapacity(container: HTMLElement): void {
+    // Available width/height inside the left panel (padding is 32px on sides)
+    const availableWidth = container.clientWidth;
+    const availableHeight = container.clientHeight;
+
+    const cols = Math.max(
+      1,
+      Math.floor((availableWidth + this.GAP) / (this.POSTER_WIDTH + this.GAP)),
+    );
+    const rows = Math.max(
+      1,
+      Math.floor((availableHeight + this.GAP) / (this.POSTER_HEIGHT + this.GAP)),
+    );
+
+    this.gridCapacity.set(cols * rows);
   }
 
   onLogin(): void {
