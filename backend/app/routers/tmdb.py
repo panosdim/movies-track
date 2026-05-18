@@ -153,7 +153,7 @@ def autocomplete_movies(search_data: dict):
 
 @router.get("/popular")
 def get_popular_movies():
-    """Get popular movies from TMDb."""
+    """Get popular movies from TMDb (pages 1 and 2 combined)."""
     if not TMDB_API_KEY:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -162,12 +162,26 @@ def get_popular_movies():
 
     try:
         with httpx.Client() as client:
-            response = client.get(
-                f"{TMDB_BASE_URL}/movie/popular",
-                headers={"Authorization": f"Bearer {TMDB_API_KEY}"},
-            )
-            response.raise_for_status()
-            return response.json()
+            responses = []
+            for page in [1, 2]:
+                response = client.get(
+                    f"{TMDB_BASE_URL}/movie/popular",
+                    params={"page": page},
+                    headers={"Authorization": f"Bearer {TMDB_API_KEY}"},
+                )
+                response.raise_for_status()
+                responses.append(response.json())
+
+            combined_results = []
+            for data in responses:
+                combined_results.extend(data.get("results", []))
+
+            return {
+                "page": 1,
+                "results": combined_results,
+                "total_pages": responses[0].get("total_pages", 0),
+                "total_results": len(combined_results),
+            }
     except httpx.HTTPError as e:
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
