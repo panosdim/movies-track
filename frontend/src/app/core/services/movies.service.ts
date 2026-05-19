@@ -12,4 +12,8 @@ export class MoviesService {
   getWatchlist(): Observable<Movie[]> {
     return this.http.get<Movie[]>(environment.watchlistUrl());
   }
+
+  getWatched(): Observable<Movie[]> {
+    return this.http.get<Movie[]>(environment.watchedMoviesUrl());
+  }
 }

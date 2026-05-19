@@ -1,0 +1,21 @@
+<div class="movies-container">
+  <h1>Watched Movies</h1>
+
+  @if (loading()) {
+    <p>Loading...</p>
+  }
+
+  @if (!loading() && movies().length === 0) {
+    <p class="empty-state">No watched movies yet.</p>
+  }
+
+  <div class="movies-grid">
+    @for (movie of movies(); track movie.id) {
+      <p-card [header]="movie.title || 'Untitled'" styleClass="movie-card">
+        <ng-template #footer>
+          <p-tag severity="success" value="Watched" />
+        </ng-template>
+      </p-card>
+    }
+  </div>
+</div>

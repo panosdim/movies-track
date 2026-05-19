@@ -15,3 +15,9 @@ body {
   margin: 0;
   font-family: var(--font-family);
 }
+
+/* Active menu item based on current route */
+.p-menubar-item-content:has(.p-menubar-item-link-active) {
+  color: var(--p-navigation-item-active-color);
+  background: var(--p-navigation-item-active-background);
+}

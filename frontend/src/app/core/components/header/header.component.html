@@ -1,0 +1,28 @@
+<div class="card">
+  <p-menubar [model]="menuItems">
+    <ng-template #start>
+      <div class="header-start">
+        <img src="assets/icons/icon-128x128.png" alt="Movies Track" class="app-logo" />
+        <span class="app-title">Movies Track</span>
+      </div>
+    </ng-template>
+
+    <ng-template #end>
+      <div class="header-end">
+        <p-button
+          icon="pi pi-plus"
+          label="Add Movie"
+          routerLink="/movies/add"
+          class="add-movie-btn"
+        />
+        <p-button
+          icon="pi pi-sign-out"
+          label="Logout"
+          severity="secondary"
+          (onClick)="onLogout()"
+          class="logout-btn"
+        />
+      </div>
+    </ng-template>
+  </p-menubar>
+</div>

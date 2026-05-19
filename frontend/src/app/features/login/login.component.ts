@@ -130,7 +130,7 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
     this.authService.login(email!, password!).subscribe({
       next: () => {
         this.isLoginInProgress.set(false);
-        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/movies';
+        const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/watchlist';
         this.router.navigateByUrl(returnUrl);
       },
       error: () => {
