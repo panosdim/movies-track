@@ -27,7 +27,7 @@ export class MoviesComponent implements OnInit {
 
   loadMovies(): void {
     this.loading.set(true);
-    this.moviesService.getMovies().subscribe({
+    this.moviesService.getWatchlist().subscribe({
       next: (data) => {
         this.movies.set(data);
         this.loading.set(false);

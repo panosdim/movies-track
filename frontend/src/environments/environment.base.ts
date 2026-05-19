@@ -21,9 +21,6 @@ export const environmentBase = {
   watchlistUrl() {
     return this.apiUrl + '/movies/watchlist';
   },
-  moviesUrl() {
-    return this.apiUrl + '/movies';
-  },
   watchedMoviesUrl() {
     return this.apiUrl + '/movies/watched';
   },

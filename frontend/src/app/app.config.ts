@@ -6,12 +6,13 @@ import Aura from '@primeuix/themes/aura';
 
 import { routes } from './app.routes';
 import { camelcaseInterceptor } from './core/interceptors/camelcase-interceptor';
+import { authInterceptor } from './core/interceptors/auth-interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
-    provideHttpClient(withInterceptors([camelcaseInterceptor])),
+    provideHttpClient(withInterceptors([camelcaseInterceptor, authInterceptor])),
     providePrimeNG({
       theme: {
         preset: Aura,
