@@ -2,11 +2,12 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  margin-right: 2rem;
 }
 
 .app-logo {
-  width: 32px;
-  height: 32px;
+  width: 48px;
+  height: 48px;
 }
 
 .app-title {
@@ -36,12 +37,4 @@
     --p-button-hover-background: rgba(255, 255, 255, 0.2);
     --p-button-hover-border-color: transparent;
   }
-}
-
-.card {
-  background: var(--card-bg);
-  border: var(--card-border);
-  padding: 2rem;
-  border-radius: 10px;
-  margin-bottom: 1rem;
 }
