@@ -38,15 +38,25 @@ class MovieUpdate(BaseModel):
     watched: bool | None = None
 
 
-class MovieResponse(BaseModel):
-    """Movie schema for API responses (excludes user_id)."""
+class WatchedMovieResponse(BaseModel):
+    """Response schema for watched movies."""
 
     id: int
     movie_id: int | None = None
     poster: str | None = None
     rating: int | None = Field(default=None, ge=0, le=5)
     title: str | None = Field(default=None, max_length=255)
-    watched: bool | None = None
+
+    model_config = {"from_attributes": True}
+
+
+class WatchlistMovieResponse(BaseModel):
+    """Response schema for watchlist movies."""
+
+    id: int
+    movie_id: int | None = None
+    poster: str | None = None
+    title: str | None = Field(default=None, max_length=255)
     providers: list[MovieProviderSchema] = []
     vote_average: float | None = None
 

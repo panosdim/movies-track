@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session, joinedload
 
 from app.database import get_db
 from app.models.movie import Movie as MovieModel, MovieProvider
-from app.schemas.movie import Movie, MovieResponse
+from app.schemas.movie import Movie, WatchedMovieResponse, WatchlistMovieResponse
 from app.utils.security import get_current_user_email
 from app.utils.tmdb import TMDB_API_KEY, TMDB_BASE_URL
 from app.recommender.model_utils import process_training_request
@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/movies", tags=["movies"])
 
 
-@router.get("/watched", response_model=list[MovieResponse])
+@router.get("/watched", response_model=list[WatchedMovieResponse])
 def get_watched_movies(
     authorization: str | None = Header(default=None),
     db: Session = Depends(get_db),
@@ -38,9 +38,7 @@ def get_watched_movies(
     return movies
 
 
-@router.get(
-    "/watchlist", response_model=list[MovieResponse]
-)
+@router.get("/watchlist", response_model=list[WatchlistMovieResponse])
 async def get_watchlist(
     authorization: str | None = Header(default=None),
     db: Session = Depends(get_db),
@@ -65,7 +63,7 @@ async def get_watchlist(
             vote_averages = await _fetch_vote_averages(tmdb_ids)
 
     return [
-        Movie.model_validate(movie).model_copy(
+        WatchlistMovieResponse.model_validate(movie).model_copy(
             update={
                 "vote_average": vote_averages.get(movie.movie_id)
                 if movie.movie_id
