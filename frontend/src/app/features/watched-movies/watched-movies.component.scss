@@ -8,10 +8,9 @@
 
 .movies-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, 185px);
   gap: 1.5rem;
 }
-
 .empty-state {
   color: var(--text-color-secondary);
   font-style: italic;

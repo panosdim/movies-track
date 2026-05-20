@@ -1,0 +1,21 @@
+<p-card [style]="{ width: '185px', overflow: 'hidden' }">
+  <ng-template #header>
+    <a
+      href="https://www.themoviedb.org/movie/{{ movie.movieId }}"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <img alt="Card" style="width: 100%" src="{{ imageBaseUrl }}w185{{ movie.poster }}" />
+    </a>
+  </ng-template>
+  <ng-template #title>
+    <div style="display: flex; align-items: center; justify-content: center">
+      <p-rating [(ngModel)]="movie.rating" />
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <div style="display: flex; align-items: center; justify-content: center; margin-top: 0.5rem">
+      <p-button class="w-full" icon="pi pi-trash" severity="danger" label="Delete" />
+    </div>
+  </ng-template>
+</p-card>

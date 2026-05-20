@@ -1,0 +1,25 @@
+<p-card [style]="{ width: '100%', overflow: 'hidden' }">
+  <div class="card-body">
+    <a
+      href="https://www.themoviedb.org/movie/{{ movie.movieId }}"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <img alt="Card" src="{{ imageBaseUrl }}w92{{ movie.poster }}" />
+    </a>
+    <div class="card-info">
+      @if (movie.voteAverage !== null && movie.voteAverage !== 0) {
+        <p-progressbar [value]="Math.round(movie.voteAverage * 10)" />
+      }
+      <div class="watch-info">
+        @for (provider of movie.providers; track provider) {
+          <img [src]="imageBaseUrl + 'w45/' + provider.logoPath" alt="Provider Logo" />
+        }
+      </div>
+      <div class="button-container">
+        <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" />
+        <p-button icon="pi pi-check" severity="success" [rounded]="true" [outlined]="true" />
+      </div>
+    </div>
+  </div>
+</p-card>

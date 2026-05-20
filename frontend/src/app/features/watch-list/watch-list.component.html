@@ -3,7 +3,7 @@
 
   @if (loading()) {
     <div class="loading-container">
-    <i class="pi pi-spin pi-spinner" style="font-size: 3rem; color: var(--p-primary-color)"></i>
+      <i class="pi pi-spin pi-spinner" style="font-size: 3rem; color: var(--p-primary-color)"></i>
     </div>
   }
 
@@ -11,13 +11,17 @@
     <p class="empty-state">No movies found. Add some movies to get started!</p>
   }
 
-  <div class="movies-grid">
-    @for (movie of movies(); track movie.id) {
-      <p-card [header]="movie.title || 'Untitled'" styleClass="movie-card">
-        <ng-template #footer>
-          <p-rating [(ngModel)]="movie.voteAverage" [readonly]="true" />
-        </ng-template>
-      </p-card>
-    }
-  </div>
+  @if (isMobile()) {
+    <div class="movies-list">
+      @for (movie of movies(); track movie.id) {
+        <app-mobile-watch-list-movie-card [movie]="movie" />
+      }
+    </div>
+  } @else {
+    <div class="movies-grid">
+      @for (movie of movies(); track movie.id) {
+        <app-watch-list-movie-card [movie]="movie" />
+      }
+    </div>
+  }
 </div>

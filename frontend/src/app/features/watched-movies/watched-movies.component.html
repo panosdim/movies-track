@@ -13,11 +13,7 @@
 
   <div class="movies-grid">
     @for (movie of movies(); track movie.id) {
-      <p-card [header]="movie.title || 'Untitled'" styleClass="movie-card">
-        <ng-template #footer>
-          <p-tag severity="success" value="Watched" />
-        </ng-template>
-      </p-card>
+      <app-watched-movie-card [movie]="movie" />
     }
   </div>
 </div>

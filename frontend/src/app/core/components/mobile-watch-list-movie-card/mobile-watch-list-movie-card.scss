@@ -1,0 +1,48 @@
+::ng-deep .p-card-body {
+  padding: 0 !important;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: stretch;
+
+  a {
+    flex-shrink: 0;
+    display: flex;
+
+    img {
+      height: 100%;
+      width: auto;
+      object-fit: cover;
+    }
+  }
+}
+
+.card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1 1 auto;
+  padding: 1rem;
+}
+
+.watch-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+
+  img {
+    max-width: 45px;
+    height: auto;
+  }
+}
+
+.button-container {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
