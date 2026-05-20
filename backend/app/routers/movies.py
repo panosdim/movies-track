@@ -1,5 +1,6 @@
 """Movies router for managing user movie lists, watchlist, and ratings."""
 
+import asyncio
 import logging
 
 import httpx
@@ -14,6 +15,7 @@ from app.utils.security import get_current_user_email
 from app.utils.tmdb import TMDB_API_KEY, TMDB_BASE_URL
 from app.recommender.model_utils import process_training_request
 from app.services.watch_provider_service import fetch_watch_providers
+from app.services.tmdb_cache import get_cached, set_cached
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +41,7 @@ def get_watched_movies(
 @router.get(
     "/watchlist", response_model=list[MovieResponse]
 )
-def get_watchlist(
+async def get_watchlist(
     authorization: str | None = Header(default=None),
     db: Session = Depends(get_db),
 ):
@@ -60,7 +62,7 @@ def get_watchlist(
     if TMDB_API_KEY:
         tmdb_ids = [m.movie_id for m in movies if m.movie_id]
         if tmdb_ids:
-            vote_averages = _fetch_vote_averages(tmdb_ids)
+            vote_averages = await _fetch_vote_averages(tmdb_ids)
 
     return [
         Movie.model_validate(movie).model_copy(
@@ -74,21 +76,35 @@ def get_watchlist(
     ]
 
 
-def _fetch_vote_averages(tmdb_ids: list) -> dict:
-    """Fetch vote_average for multiple movies from TMDb."""
-    results = {}
-    for movie_id in tmdb_ids:
+async def _fetch_vote_averages(tmdb_ids: list) -> dict:
+    """Fetch vote_average for multiple movies from TMDb using parallel async requests with caching."""
+    results: dict[int, float] = {}
+    headers = {"Authorization": f"Bearer {TMDB_API_KEY}"}
+
+    async def fetch_one(client: httpx.AsyncClient, movie_id: int):
+        cached = get_cached(movie_id)
+        if cached is not None:
+            return movie_id, cached.get("vote_average")
+
         try:
-            with httpx.Client() as client:
-                response = client.get(
-                    f"{TMDB_BASE_URL}/movie/{movie_id}",
-                    headers={"Authorization": f"Bearer {TMDB_API_KEY}"},
-                )
-                if response.status_code == 200:
-                    data = response.json()
-                    results[movie_id] = data.get("vote_average")
+            response = await client.get(
+                f"{TMDB_BASE_URL}/movie/{movie_id}",
+                headers=headers,
+            )
+            if response.status_code == 200:
+                data = response.json()
+                set_cached(movie_id, data)
+                return movie_id, data.get("vote_average")
         except httpx.HTTPError:
             pass
+        return movie_id, None
+
+    async with httpx.AsyncClient() as client:
+        tasks = [fetch_one(client, mid) for mid in tmdb_ids]
+        for movie_id, vote_average in await asyncio.gather(*tasks):
+            if vote_average is not None:
+                results[movie_id] = vote_average
+
     return results
 
 
