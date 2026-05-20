@@ -1,19 +1,21 @@
 <div class="movies-container">
-  <h1>Movie Recommendations</h1>
+  <h1>Watch List ({{ movies().length }})</h1>
 
   @if (loading()) {
-    <p>Loading...</p>
+    <div class="loading-container">
+    <i class="pi pi-spin pi-spinner" style="font-size: 3rem; color: var(--p-primary-color)"></i>
+    </div>
   }
 
   @if (!loading() && movies().length === 0) {
-    <p class="empty-state">No movies found. Add some recommendations!</p>
+    <p class="empty-state">No movies found. Add some movies to get started!</p>
   }
 
   <div class="movies-grid">
     @for (movie of movies(); track movie.id) {
       <p-card [header]="movie.title || 'Untitled'" styleClass="movie-card">
         <ng-template #footer>
-          <p-rating [(ngModel)]="movie.rating" [readonly]="true" />
+          <p-rating [(ngModel)]="movie.voteAverage" [readonly]="true" />
         </ng-template>
       </p-card>
     }

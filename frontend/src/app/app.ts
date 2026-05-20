@@ -1,10 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './core/components/header/header.component';
+import { Footer } from "./core/components/footer/footer";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HeaderComponent],
+  imports: [RouterOutlet, HeaderComponent, Footer],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
@@ -14,6 +15,10 @@ export class App {
   readonly title = 'Movies Track';
 
   showHeader(): boolean {
+    return !this.router.url.includes('/login');
+  }
+
+  showFooter(): boolean {
     return !this.router.url.includes('/login');
   }
 }

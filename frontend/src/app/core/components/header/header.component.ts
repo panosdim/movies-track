@@ -6,12 +6,12 @@ import { AvatarModule } from 'primeng/avatar';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { MenuItem } from 'primeng/api';
-import { Card } from "primeng/card";
+import { Card } from 'primeng/card';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, MenubarModule, ButtonModule, AvatarModule, RouterLink, Card],
+  imports: [CommonModule, MenubarModule, ButtonModule, AvatarModule, RouterLink],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })

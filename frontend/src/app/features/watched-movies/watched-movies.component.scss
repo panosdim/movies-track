@@ -16,3 +16,10 @@
   color: var(--text-color-secondary);
   font-style: italic;
 }
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+}

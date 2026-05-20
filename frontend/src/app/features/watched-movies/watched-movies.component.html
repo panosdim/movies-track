@@ -2,7 +2,9 @@
   <h1>Watched Movies</h1>
 
   @if (loading()) {
-    <p>Loading...</p>
+    <div class="loading-container">
+      <i class="pi pi-spin pi-spinner" style="font-size: 3rem; color: var(--p-primary-color)"></i>
+    </div>
   }
 
   @if (!loading() && movies().length === 0) {

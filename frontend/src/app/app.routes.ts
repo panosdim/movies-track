@@ -15,14 +15,14 @@ export const routes: Routes = [
     path: 'watchlist',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./features/movies/movies.component').then((m) => m.MoviesComponent),
+      import('./features/watch-list/watch-list.component').then((m) => m.WatchListComponent),
   },
   {
     path: 'watched',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('./features/movies/watched/movies-watched.component').then(
-        (m) => m.MoviesWatchedComponent,
+      import('./features/watched-movies/watched-movies.component').then(
+        (m) => m.WatchedMoviesComponent,
       ),
   },
 ];

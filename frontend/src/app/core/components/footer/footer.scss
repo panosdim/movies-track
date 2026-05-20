@@ -1,0 +1,11 @@
+.footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  padding: 16px;
+}
+
+@media (max-width: 960px) {
+  .footer {
+    display: none;
+  }
+}

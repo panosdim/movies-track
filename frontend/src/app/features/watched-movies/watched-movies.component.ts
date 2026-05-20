@@ -5,20 +5,20 @@ import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { RatingModule } from 'primeng/rating';
 import { FormsModule } from '@angular/forms';
-import { MoviesService } from '../../../core/services/movies.service';
-import { Movie } from '../../../core/models/movie.model';
+import { MoviesService } from '../../core/services/movies.service';
+import { WatchedMovie } from '../../core/models/movie.model';
 
 @Component({
-  selector: 'app-movies-watched',
+  selector: 'app-watched-movies',
   standalone: true,
   imports: [CommonModule, CardModule, ButtonModule, TagModule, RatingModule, FormsModule],
-  templateUrl: './movies-watched.component.html',
-  styleUrl: './movies-watched.component.scss',
+  templateUrl: './watched-movies.component.html',
+  styleUrl: './watched-movies.component.scss',
 })
-export class MoviesWatchedComponent implements OnInit {
+export class WatchedMoviesComponent implements OnInit {
   private readonly moviesService = inject(MoviesService);
 
-  movies = signal<Movie[]>([]);
+  movies = signal<WatchedMovie[]>([]);
   loading = signal(false);
 
   ngOnInit(): void {

@@ -6,19 +6,19 @@ import { TagModule } from 'primeng/tag';
 import { RatingModule } from 'primeng/rating';
 import { FormsModule } from '@angular/forms';
 import { MoviesService } from '../../core/services/movies.service';
-import { Movie } from '../../core/models/movie.model';
+import { WatchlistMovie } from '../../core/models/movie.model';
 
 @Component({
-  selector: 'app-movies',
+  selector: 'app-watchlist',
   standalone: true,
   imports: [CommonModule, CardModule, ButtonModule, TagModule, RatingModule, FormsModule],
-  templateUrl: './movies.component.html',
-  styleUrl: './movies.component.scss',
+  templateUrl: './watch-list.component.html',
+  styleUrl: './watch-list.component.scss',
 })
-export class MoviesComponent implements OnInit {
+export class WatchListComponent implements OnInit {
   private readonly moviesService = inject(MoviesService);
 
-  movies = signal<Movie[]>([]);
+  movies = signal<WatchlistMovie[]>([]);
   loading = signal(false);
 
   ngOnInit(): void {

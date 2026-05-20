@@ -1,12 +1,18 @@
-export interface Movie {
+export interface WatchlistMovie {
   id: number;
   poster: string | null;
   movieId: number;
   title: string | null;
-  watched: boolean | null;
-  rating: number | null;
   providers: WatchProvider[];
   voteAverage: number;
+}
+
+export interface WatchedMovie {
+  id: number;
+  poster: string | null;
+  movieId: number;
+  title: string | null;
+  rating: number | null;
 }
 
 export type WatchProvider = {
