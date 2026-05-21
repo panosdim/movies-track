@@ -1,9 +1,9 @@
-import { Component, Input } from '@angular/core';
-import { WatchlistMovie } from '../../models/movie.model';
-import { environment } from '../../../../environments/environment';
+import { Component, input } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { ProgressBarModule } from 'primeng/progressbar';
+import { environment } from '../../../../environments/environment';
+import { WatchlistMovie } from '../../models/movie.model';
 
 @Component({
   selector: 'app-mobile-watch-list-movie-card',
@@ -12,7 +12,7 @@ import { ProgressBarModule } from 'primeng/progressbar';
   styleUrl: './mobile-watch-list-movie-card.scss',
 })
 export class MobileWatchListMovieCard {
-  @Input({ required: true }) movie: WatchlistMovie = {} as WatchlistMovie;
+  movie = input.required<WatchlistMovie>();
 
   protected readonly imageBaseUrl = environment.imageBaseUrl;
   protected readonly Math = Math;

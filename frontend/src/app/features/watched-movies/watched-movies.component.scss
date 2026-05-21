@@ -16,6 +16,12 @@
   font-style: italic;
 }
 
+.movies-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
 .loading-container {
   display: flex;
   justify-content: center;

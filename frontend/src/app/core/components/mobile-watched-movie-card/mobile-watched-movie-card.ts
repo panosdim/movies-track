@@ -7,13 +7,12 @@ import { environment } from '../../../../environments/environment';
 import { WatchedMovie } from '../../models/movie.model';
 
 @Component({
-  selector: 'app-watched-movie-card',
+  selector: 'app-mobile-watched-movie-card',
   imports: [CardModule, ButtonModule, RatingModule, FormsModule],
-  templateUrl: './watched-movie-card.html',
-  styleUrl: './watched-movie-card.scss',
+  templateUrl: './mobile-watched-movie-card.html',
+  styleUrl: './mobile-watched-movie-card.scss',
 })
-export class WatchedMovieCard {
+export class MobileWatchewatdMovieCard {
   movie = input.required<WatchedMovie>();
-
   protected readonly imageBaseUrl = environment.imageBaseUrl;
 }

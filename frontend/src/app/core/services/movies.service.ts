@@ -1,13 +1,12 @@
-import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { WatchedMovie, WatchlistMovie } from '../models/movie.model';
 import { environment } from '../../../environments/environment';
+import { WatchedMovie, WatchlistMovie } from '../models/movie.model';
 
 @Injectable({ providedIn: 'root' })
 export class MoviesService {
   private readonly http = inject(HttpClient);
-  private readonly apiUrl = 'http://localhost:8000/api/v1/movies';
 
   getWatchlist(): Observable<WatchlistMovie[]> {
     return this.http.get<WatchlistMovie[]>(environment.watchlistUrl());

@@ -1,20 +1,20 @@
 <p-card [style]="{ width: '185px', overflow: 'hidden' }">
   <ng-template #header>
     <a
-      href="https://www.themoviedb.org/movie/{{ movie.movieId }}"
+      href="https://www.themoviedb.org/movie/{{ movie().movieId }}"
       target="_blank"
       rel="noopener noreferrer"
     >
-      <img alt="Card" style="width: 100%" src="{{ imageBaseUrl }}w185{{ movie.poster }}" />
+      <img alt="Card" style="width: 100%" src="{{ imageBaseUrl }}w185{{ movie().poster }}" />
     </a>
   </ng-template>
   <ng-template #title>
-    @if (movie.voteAverage !== null && movie.voteAverage !== 0) {
-      <p-progressbar [value]="Math.round(movie.voteAverage * 10)" />
+    @if (movie().voteAverage !== null && movie().voteAverage !== 0) {
+      <p-progressbar [value]="Math.round(movie().voteAverage * 10)" />
     }
   </ng-template>
   <div class="watch-info">
-    @for (provider of movie.providers; track provider) {
+    @for (provider of movie().providers; track provider) {
       <img [src]="imageBaseUrl + 'w45/' + provider.logoPath" alt="Provider Logo" />
     }
   </div>

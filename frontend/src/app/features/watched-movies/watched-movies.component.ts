@@ -1,18 +1,28 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CardModule } from 'primeng/card';
-import { ButtonModule } from 'primeng/button';
-import { TagModule } from 'primeng/tag';
-import { RatingModule } from 'primeng/rating';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MoviesService } from '../../core/services/movies.service';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { RatingModule } from 'primeng/rating';
+import { TagModule } from 'primeng/tag';
+import { WatchedMovieCard } from '../../core/components/watched-movie-card/watched-movie-card';
 import { WatchedMovie } from '../../core/models/movie.model';
-import { WatchedMovieCard } from "../../core/components/watched-movie-card/watched-movie-card";
+import { MoviesService } from '../../core/services/movies.service';
+import { MobileWatchewatdMovieCard } from "../../core/components/mobile-watched-movie-card/mobile-watched-movie-card";
 
 @Component({
   selector: 'app-watched-movies',
   standalone: true,
-  imports: [CommonModule, CardModule, ButtonModule, TagModule, RatingModule, FormsModule, WatchedMovieCard],
+  imports: [
+    CommonModule,
+    CardModule,
+    ButtonModule,
+    TagModule,
+    RatingModule,
+    FormsModule,
+    WatchedMovieCard,
+    MobileWatchewatdMovieCard
+],
   templateUrl: './watched-movies.component.html',
   styleUrl: './watched-movies.component.scss',
 })
@@ -21,8 +31,12 @@ export class WatchedMoviesComponent implements OnInit {
 
   movies = signal<WatchedMovie[]>([]);
   loading = signal(false);
+  isMobile = signal(false);
 
   ngOnInit(): void {
+    const mediaQuery = window.matchMedia('(max-width: 960px)');
+    this.isMobile.set(mediaQuery.matches);
+    mediaQuery.addEventListener('change', (e) => this.isMobile.set(e.matches));
     this.loadMovies();
   }
 
