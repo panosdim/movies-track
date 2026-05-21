@@ -1,32 +1,30 @@
 import {
-  Component,
-  OnInit,
   AfterViewInit,
-  OnDestroy,
-  inject,
-  signal,
+  Component,
   computed,
   ElementRef,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal,
 } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
+import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
-import { InputTextModule } from 'primeng/inputtext';
+import { FloatLabelModule } from 'primeng/floatlabel';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
+import { InputTextModule } from 'primeng/inputtext';
+import { MessageModule } from 'primeng/message';
+import { PasswordModule } from 'primeng/password';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
-import { MessageModule } from 'primeng/message';
-import { FloatLabelModule } from 'primeng/floatlabel';
-import { PasswordModule } from 'primeng/password';
 
-import { AuthService } from '../../core/services/auth.service';
-import { PopularMoviesService } from '../../core/services/popular-movies.service';
-import { TmdbMovie } from '../../core/models/tmdb-movie.model';
-import { environment } from '../../../environments/environment';
+import { environment } from '@environments';
+import { AuthService, PopularMoviesService, TmdbMovie } from '@core';
 
 @Component({
   selector: 'app-login',

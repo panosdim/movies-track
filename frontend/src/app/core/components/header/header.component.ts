@@ -4,7 +4,7 @@ import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
 import { AvatarModule } from 'primeng/avatar';
 import { RouterLink } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '@core/services';
 import { MenuItem } from 'primeng/api';
 import { Card } from 'primeng/card';
 

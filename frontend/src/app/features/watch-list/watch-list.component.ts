@@ -5,10 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { RatingModule } from 'primeng/rating';
 import { FormsModule } from '@angular/forms';
-import { MoviesService } from '../../core/services/movies.service';
-import { WatchlistMovie } from '../../core/models/movie.model';
-import { WatchListMovieCard } from '../../core/components/watch-list-movie-card/watch-list-movie-card';
-import { MobileWatchListMovieCard } from '../../core/components/mobile-watch-list-movie-card/mobile-watch-list-movie-card';
+import { MoviesService, WatchListMovieCard, MobileWatchListMovieCard, WatchlistMovie } from '@core';
 
 @Component({
   selector: 'app-watchlist',

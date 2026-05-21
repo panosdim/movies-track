@@ -3,8 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { RatingModule } from 'primeng/rating';
-import { environment } from '../../../../environments/environment';
-import { WatchedMovie } from '../../models/movie.model';
+import { environment } from '@environments';
+import { WatchedMovie } from '@core/models';
 
 @Component({
   selector: 'app-watched-movie-card',

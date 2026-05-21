@@ -5,10 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { RatingModule } from 'primeng/rating';
 import { TagModule } from 'primeng/tag';
-import { WatchedMovieCard } from '../../core/components/watched-movie-card/watched-movie-card';
-import { WatchedMovie } from '../../core/models/movie.model';
-import { MoviesService } from '../../core/services/movies.service';
-import { MobileWatchewatdMovieCard } from "../../core/components/mobile-watched-movie-card/mobile-watched-movie-card";
+import { WatchedMovieCard, WatchedMovie, MoviesService, MobileWatchewatdMovieCard } from '@core';
 
 @Component({
   selector: 'app-watched-movies',

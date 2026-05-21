@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
-import { WatchedMovie, WatchlistMovie } from '../models/movie.model';
+import { environment } from '@environments';
+import { WatchedMovie, WatchlistMovie } from '@core/models';
 
 @Injectable({ providedIn: 'root' })
 export class MoviesService {

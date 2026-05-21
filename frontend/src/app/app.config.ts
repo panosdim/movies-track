@@ -6,8 +6,7 @@ import Aura from '@primeuix/themes/aura';
 import { definePreset } from '@primeuix/themes';
 
 import { routes } from './app.routes';
-import { camelcaseInterceptor } from './core/interceptors/camelcase-interceptor';
-import { authInterceptor } from './core/interceptors/auth-interceptor';
+import { camelcaseInterceptor, authInterceptor } from '@core/interceptors';
 
 export const appConfig: ApplicationConfig = {
   providers: [

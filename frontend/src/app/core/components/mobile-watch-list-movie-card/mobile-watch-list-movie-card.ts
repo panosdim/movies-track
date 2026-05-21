@@ -2,8 +2,8 @@ import { Component, input } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { ProgressBarModule } from 'primeng/progressbar';
-import { environment } from '../../../../environments/environment';
-import { WatchlistMovie } from '../../models/movie.model';
+import { environment } from '@environments';
+import { WatchlistMovie } from '@core/models';
 
 @Component({
   selector: 'app-mobile-watch-list-movie-card',
