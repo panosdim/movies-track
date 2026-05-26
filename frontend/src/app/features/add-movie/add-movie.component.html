@@ -1,0 +1,64 @@
+<div class="add-movie-container">
+  <h1>Add Movie</h1>
+
+  <div class="search-wrapper">
+    <p-autoComplete
+      [(ngModel)]="searchQuery"
+      (completeMethod)="searchMovies($event.query)"
+      [suggestions]="searchResults()"
+      optionLabel="title"
+      placeholder="Search for a movie..."
+      field="title"
+    >
+      <ng-template let-movie pTemplate="item">
+        <div class="movie-result">
+          @if (movie.posterPath) {
+            <img
+              class="result-poster"
+              [src]="'https://image.tmdb.org/t/p/w92' + movie.posterPath"
+              [alt]="movie.title"
+            />
+          }
+          <div class="result-info">
+            <span class="result-title">{{ movie.title }}</span>
+            <span class="result-year">{{ movie.releaseDate?.split('-')[0] || 'N/A' }}</span>
+          </div>
+        </div>
+      </ng-template>
+    </p-autoComplete>
+  </div>
+
+  @if (searchResults().length > 0) {
+    <div class="results-grid">
+      @for (movie of searchResults(); track movie.id) {
+        <p-card class="result-card">
+          <ng-template #header>
+            <img
+              [src]="'https://image.tmdb.org/t/p/w185' + (movie.posterPath || '')"
+              [alt]="movie.title"
+              class="w-full"
+            />
+          </ng-template>
+          <ng-template #title>
+            <div class="card-title">{{ movie.title }}</div>
+            `
+          </ng-template>
+          <ng-template #subtitle>
+            @if (movie.releaseDate) {
+              <span class="card-year">{{ movie.releaseDate.split('-')[0] }}</span>
+            } @else {
+              <span class="card-year">N/A</span>
+            }
+          </ng-template>
+
+          @if (movie.voteAverage && movie.voteAverage > 0) {
+            <p-progressbar [value]="Math.round(movie.voteAverage * 10)" />
+          }
+          <ng-template #footer>
+            <p-button label="Add to Watchlist" class="w-full" />
+          </ng-template>
+        </p-card>
+      }
+    </div>
+  }
+</div>

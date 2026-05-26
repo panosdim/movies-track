@@ -3,10 +3,9 @@ import { CommonModule } from '@angular/common';
 import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
 import { AvatarModule } from 'primeng/avatar';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '@core/services';
 import { MenuItem } from 'primeng/api';
-import { Card } from 'primeng/card';
 
 @Component({
   selector: 'app-header',
@@ -16,6 +15,7 @@ import { Card } from 'primeng/card';
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
+  private readonly router = inject(Router);
   private readonly authService = inject(AuthService);
   readonly menuItems: MenuItem[] = [
     {
@@ -34,5 +34,9 @@ export class HeaderComponent {
 
   onLogout(): void {
     this.authService.logout();
+  }
+
+  onAddMovie(): void {
+    this.router.navigate(['/movies/add']);
   }
 }

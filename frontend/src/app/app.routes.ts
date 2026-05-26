@@ -17,12 +17,18 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/watch-list/watch-list.component').then((m) => m.WatchListComponent),
   },
-  {
-    path: 'watched',
-    canActivate: [authGuard],
-    loadComponent: () =>
-      import('./features/watched-movies/watched-movies.component').then(
-        (m) => m.WatchedMoviesComponent,
-      ),
-  },
+    {
+      path: 'watched',
+      canActivate: [authGuard],
+      loadComponent: () =>
+        import('./features/watched-movies/watched-movies.component').then(
+          (m) => m.WatchedMoviesComponent,
+        ),
+    },
+    {
+      path: 'movies/add',
+      canActivate: [authGuard],
+      loadComponent: () =>
+        import('./features/add-movie/add-movie.component').then((m) => m.AddMovieComponent),
+    },
 ];

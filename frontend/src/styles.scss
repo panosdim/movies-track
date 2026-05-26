@@ -17,6 +17,11 @@ body {
 }
 
 /* Active menu item based on current route */
+.p-menubar-item-content {
+  color: var(--p-navigation-item-color);
+  background: var(--p-navigation-item-background);
+}
+
 .p-menubar-item-content:has(.p-menubar-item-link-active) {
   color: var(--p-navigation-item-active-color);
   background: var(--p-navigation-item-active-background);
