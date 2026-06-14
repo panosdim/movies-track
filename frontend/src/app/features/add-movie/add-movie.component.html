@@ -3,21 +3,23 @@
 
   <div class="search-wrapper">
     <p-autoComplete
-      [(ngModel)]="searchQuery"
-      (completeMethod)="searchMovies($event.query)"
-      [suggestions]="searchResults()"
+      [ngModel]="searchQuery()"
+      (ngModelChange)="updateSearchQuery($event)"
+      (completeMethod)="loadAutocompleteSuggestions($event.query)"
+      (onSelect)="onSuggestionSelect($event.value)"
+      (keyup.enter)="onEnter()"
+      [suggestions]="autocompleteSuggestions()"
       optionLabel="title"
       placeholder="Search for a movie..."
       field="title"
+      fluid
+      filled
+      [showClear]="true"
     >
       <ng-template let-movie pTemplate="item">
         <div class="movie-result">
-          @if (movie.posterPath) {
-            <img
-              class="result-poster"
-              [src]="'https://image.tmdb.org/t/p/w92' + movie.posterPath"
-              [alt]="movie.title"
-            />
+          @if (movie.posterUrl) {
+            <img class="result-poster" [src]="movie.posterUrl" [alt]="movie.title" />
           }
           <div class="result-info">
             <span class="result-title">{{ movie.title }}</span>
@@ -41,7 +43,6 @@
           </ng-template>
           <ng-template #title>
             <div class="card-title">{{ movie.title }}</div>
-            `
           </ng-template>
           <ng-template #subtitle>
             @if (movie.releaseDate) {

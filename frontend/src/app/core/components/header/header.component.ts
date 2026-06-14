@@ -3,14 +3,14 @@ import { CommonModule } from '@angular/common';
 import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
 import { AvatarModule } from 'primeng/avatar';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '@core/services';
 import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule, MenubarModule, ButtonModule, AvatarModule, RouterLink],
+  imports: [CommonModule, MenubarModule, ButtonModule, AvatarModule],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
 })
@@ -30,13 +30,15 @@ export class HeaderComponent {
       routerLink: '/watched',
       routerLinkActiveOptions: { exact: true },
     },
+    {
+      label: 'Add Movie',
+      icon: 'pi pi-plus',
+      routerLink: '/movies/add',
+      routerLinkActiveOptions: { exact: true },
+    },
   ];
 
   onLogout(): void {
     this.authService.logout();
-  }
-
-  onAddMovie(): void {
-    this.router.navigate(['/movies/add']);
   }
 }

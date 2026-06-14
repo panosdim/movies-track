@@ -1,0 +1,7 @@
+[
+  {
+    "label": "Start Frontend",
+    "command": "npm start",
+    "cwd": "frontend",
+  },
+]
