@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { ProgressBarModule } from 'primeng/progressbar';
@@ -15,6 +15,8 @@ import { WatchlistMovie } from '@core/models';
 export class WatchListMovieCard {
   movie = input.required<WatchlistMovie>();
   searchMode = input(false);
+  addDisabled = input(false);
+  addToWatchlist = output<WatchlistMovie>();
 
   protected readonly imageBaseUrl = environment.imageBaseUrl;
   protected readonly Math = Math;

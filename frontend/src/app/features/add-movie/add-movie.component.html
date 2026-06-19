@@ -1,3 +1,5 @@
+<p-toast position="top-right" />
+
 <div class="add-movie-container">
   <h1>Add Movie</h1>
 
@@ -34,13 +36,23 @@
     @if (isMobile()) {
       <div class="results-list">
         @for (movie of watchlistSearchResults(); track movie.id) {
-          <app-mobile-watch-list-movie-card [movie]="movie" [searchMode]="true" />
+          <app-mobile-watch-list-movie-card
+            [movie]="movie"
+            [searchMode]="true"
+            [addDisabled]="isAddToWatchlistDisabled(movie.movieId)"
+            (addToWatchlist)="addToWatchlist($event)"
+          />
         }
       </div>
     } @else {
       <div class="results-grid">
         @for (movie of watchlistSearchResults(); track movie.id) {
-          <app-watch-list-movie-card [movie]="movie" [searchMode]="true" />
+          <app-watch-list-movie-card
+            [movie]="movie"
+            [searchMode]="true"
+            [addDisabled]="isAddToWatchlistDisabled(movie.movieId)"
+            (addToWatchlist)="addToWatchlist($event)"
+          />
         }
       </div>
     }

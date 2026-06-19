@@ -20,7 +20,12 @@
   </div>
   <ng-template #footer>
     @if (searchMode()) {
-    <p-button label="Add to Watchlist" class="w-full search-action-button" />
+    <p-button
+      label="Add to Watchlist"
+      class="w-full search-action-button"
+      [disabled]="addDisabled()"
+      (onClick)="addToWatchlist.emit(movie())"
+    />
     } @else {
     <div
       style="display: flex; align-items: center; justify-content: space-between; margin-top: 0.5rem"
