@@ -1,3 +1,5 @@
+<p-confirmDialog />
+
 <div class="movies-container">
   <h1>Watch List ({{ movies().length }})</h1>
 
@@ -14,13 +16,16 @@
   @if (isMobile()) {
     <div class="movies-list">
       @for (movie of movies(); track movie.id) {
-        <app-mobile-watch-list-movie-card [movie]="movie" />
+        <app-mobile-watch-list-movie-card
+          [movie]="movie"
+          (deleteMovie)="confirmDeleteMovie($event)"
+        />
       }
     </div>
   } @else {
     <div class="movies-grid">
       @for (movie of movies(); track movie.id) {
-        <app-watch-list-movie-card [movie]="movie" />
+        <app-watch-list-movie-card [movie]="movie" (deleteMovie)="confirmDeleteMovie($event)" />
       }
     </div>
   }

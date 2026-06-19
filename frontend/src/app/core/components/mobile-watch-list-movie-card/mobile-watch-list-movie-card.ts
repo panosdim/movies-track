@@ -16,6 +16,7 @@ export class MobileWatchListMovieCard {
   searchMode = input(false);
   addDisabled = input(false);
   addToWatchlist = output<WatchlistMovie>();
+  deleteMovie = output<WatchlistMovie>();
 
   protected readonly imageBaseUrl = environment.imageBaseUrl;
   protected readonly Math = Math;

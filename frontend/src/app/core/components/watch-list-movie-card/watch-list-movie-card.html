@@ -37,6 +37,7 @@
         [outlined]="true"
         pTooltip="Delete movie"
         tooltipPosition="bottom"
+        (onClick)="deleteMovie.emit(movie())"
       />
       <p-button
         icon="pi pi-check"

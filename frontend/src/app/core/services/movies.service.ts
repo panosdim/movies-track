@@ -25,4 +25,8 @@ export class MoviesService {
   addToWatchlist(movie: AddToWatchlistRequest): Observable<WatchlistMovie> {
     return this.http.post<WatchlistMovie>(environment.moviesUrl(), movie);
   }
+
+  deleteMovie(movieId: number): Observable<void> {
+    return this.http.delete<void>(`${environment.moviesUrl()}/${movieId}`);
+  }
 }

@@ -5,6 +5,8 @@ import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { RatingModule } from 'primeng/rating';
 import { FormsModule } from '@angular/forms';
+import { ConfirmationService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MoviesService, WatchListMovieCard, MobileWatchListMovieCard, WatchlistMovie } from '@core';
 
 @Component({
@@ -17,14 +19,17 @@ import { MoviesService, WatchListMovieCard, MobileWatchListMovieCard, WatchlistM
     TagModule,
     RatingModule,
     FormsModule,
+    ConfirmDialogModule,
     WatchListMovieCard,
     MobileWatchListMovieCard,
   ],
+  providers: [ConfirmationService],
   templateUrl: './watch-list.component.html',
   styleUrl: './watch-list.component.scss',
 })
 export class WatchListComponent implements OnInit {
   private readonly moviesService = inject(MoviesService);
+  private readonly confirmationService = inject(ConfirmationService);
 
   movies = signal<WatchlistMovie[]>([]);
   loading = signal(false);
@@ -46,6 +51,26 @@ export class WatchListComponent implements OnInit {
       },
       error: () => {
         this.loading.set(false);
+      },
+    });
+  }
+
+  confirmDeleteMovie(movie: WatchlistMovie): void {
+    this.confirmationService.confirm({
+      header: 'Delete movie',
+      message: `Are you sure you want to delete ${movie.title ?? 'this movie'} from your watchlist?`,
+      icon: 'pi pi-exclamation-triangle',
+      acceptButtonStyleClass: 'p-button-danger',
+      acceptLabel: 'Delete',
+      rejectLabel: 'Cancel',
+      accept: () => this.deleteMovie(movie),
+    });
+  }
+
+  private deleteMovie(movie: WatchlistMovie): void {
+    this.moviesService.deleteMovie(movie.id).subscribe({
+      next: () => {
+        this.movies.update((movies) => movies.filter((item) => item.id !== movie.id));
       },
     });
   }
