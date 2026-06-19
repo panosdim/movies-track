@@ -30,36 +30,19 @@
     </p-autoComplete>
   </div>
 
-  @if (searchResults().length > 0) {
-    <div class="results-grid">
-      @for (movie of searchResults(); track movie.id) {
-        <p-card class="result-card">
-          <ng-template #header>
-            <img
-              [src]="'https://image.tmdb.org/t/p/w185' + (movie.posterPath || '')"
-              [alt]="movie.title"
-              class="w-full"
-            />
-          </ng-template>
-          <ng-template #title>
-            <div class="card-title">{{ movie.title }}</div>
-          </ng-template>
-          <ng-template #subtitle>
-            @if (movie.releaseDate) {
-              <span class="card-year">{{ movie.releaseDate.split('-')[0] }}</span>
-            } @else {
-              <span class="card-year">N/A</span>
-            }
-          </ng-template>
-
-          @if (movie.voteAverage && movie.voteAverage > 0) {
-            <p-progressbar [value]="Math.round(movie.voteAverage * 10)" />
-          }
-          <ng-template #footer>
-            <p-button label="Add to Watchlist" class="w-full" />
-          </ng-template>
-        </p-card>
-      }
-    </div>
+  @if (watchlistSearchResults().length > 0) {
+    @if (isMobile()) {
+      <div class="results-list">
+        @for (movie of watchlistSearchResults(); track movie.id) {
+          <app-mobile-watch-list-movie-card [movie]="movie" [searchMode]="true" />
+        }
+      </div>
+    } @else {
+      <div class="results-grid">
+        @for (movie of watchlistSearchResults(); track movie.id) {
+          <app-watch-list-movie-card [movie]="movie" [searchMode]="true" />
+        }
+      </div>
+    }
   }
 </div>

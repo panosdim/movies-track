@@ -13,6 +13,7 @@ import { WatchlistMovie } from '@core/models';
 })
 export class MobileWatchListMovieCard {
   movie = input.required<WatchlistMovie>();
+  searchMode = input(false);
 
   protected readonly imageBaseUrl = environment.imageBaseUrl;
   protected readonly Math = Math;

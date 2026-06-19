@@ -5,3 +5,11 @@
   width: 100%;
   padding-bottom: 1rem;
 }
+
+:host ::ng-deep .search-action-button .p-button {
+  font-size: 0.8rem;
+}
+
+:host ::ng-deep .search-action-button .p-button-label {
+  white-space: nowrap;
+}

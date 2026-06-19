@@ -1,19 +1,24 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '@environments';
-import { TmdbMovie, TmdbPopularResponse } from '@core/models';
+import {
+  MobileWatchListMovieCard,
+  TmdbMovie,
+  TmdbPopularResponse,
+  WatchListMovieCard,
+  WatchlistMovie,
+} from '@core';
 import { AutoCompleteModule } from 'primeng/autocomplete';
-import { CardModule } from 'primeng/card';
-import { ProgressBarModule } from 'primeng/progressbar';
-import { ButtonModule } from 'primeng/button';
 
 interface MovieAutocompleteSuggestion {
   title: string;
   releaseDate: string | null;
   posterUrl: string;
 }
+
+type SearchQueryValue = string | MovieAutocompleteSuggestion | null;
 
 @Component({
   selector: 'app-add-movie',
@@ -22,28 +27,50 @@ interface MovieAutocompleteSuggestion {
     CommonModule,
     FormsModule,
     AutoCompleteModule,
-    CardModule,
-    ProgressBarModule,
-    ButtonModule,
+    WatchListMovieCard,
+    MobileWatchListMovieCard,
   ],
   templateUrl: './add-movie.component.html',
   styleUrl: './add-movie.component.scss',
 })
-export class AddMovieComponent {
+export class AddMovieComponent implements OnInit {
   private readonly http = inject(HttpClient);
 
   searchQuery = signal('');
   autocompleteSuggestions = signal<MovieAutocompleteSuggestion[]>([]);
   searchResults = signal<TmdbMovie[]>([]);
   loading = signal(false);
+  isMobile = signal(false);
 
-  updateSearchQuery(value: string | null): void {
-    const normalizedValue = value ?? '';
+  watchlistSearchResults = computed<WatchlistMovie[]>(() =>
+    this.searchResults().map((movie) => this.mapToWatchlistMovie(movie)),
+  );
+
+  ngOnInit(): void {
+    const mediaQuery = window.matchMedia('(max-width: 960px)');
+    this.isMobile.set(mediaQuery.matches);
+    mediaQuery.addEventListener('change', (e) => this.isMobile.set(e.matches));
+  }
+
+  updateSearchQuery(value: SearchQueryValue): void {
+    const normalizedValue = this.normalizeSearchQuery(value);
     this.searchQuery.set(normalizedValue);
 
     if (!normalizedValue.trim()) {
       this.clearSearchState();
     }
+  }
+
+  private normalizeSearchQuery(value: SearchQueryValue): string {
+    if (typeof value === 'string') {
+      return value;
+    }
+
+    if (value && typeof value === 'object' && 'title' in value) {
+      return value.title;
+    }
+
+    return '';
   }
 
   clearSearchState(): void {
@@ -53,7 +80,7 @@ export class AddMovieComponent {
   }
 
   loadAutocompleteSuggestions(query: string | null): void {
-    const trimmedQuery = (query ?? '').trim();
+    const trimmedQuery = this.normalizeSearchQuery(query).trim();
 
     if (trimmedQuery.length < 2) {
       this.autocompleteSuggestions.set([]);
@@ -80,8 +107,8 @@ export class AddMovieComponent {
       });
   }
 
-  searchMovies(query: string | null): void {
-    const trimmedQuery = (query ?? '').trim();
+  searchMovies(query: SearchQueryValue): void {
+    const trimmedQuery = this.normalizeSearchQuery(query).trim();
 
     if (trimmedQuery.length < 2) {
       this.clearSearchState();
@@ -110,5 +137,14 @@ export class AddMovieComponent {
     this.searchMovies(suggestion.title);
   }
 
-  protected readonly Math = Math;
+  private mapToWatchlistMovie(movie: TmdbMovie): WatchlistMovie {
+    return {
+      id: movie.id,
+      movieId: movie.id,
+      title: movie.title,
+      poster: movie.posterPath,
+      providers: [],
+      voteAverage: movie.voteAverage,
+    };
+  }
 }

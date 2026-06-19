@@ -14,6 +14,7 @@ import { WatchlistMovie } from '@core/models';
 })
 export class WatchListMovieCard {
   movie = input.required<WatchlistMovie>();
+  searchMode = input(false);
 
   protected readonly imageBaseUrl = environment.imageBaseUrl;
   protected readonly Math = Math;

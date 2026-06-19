@@ -9,16 +9,20 @@
     </a>
     <div class="card-info">
       @if (movie().voteAverage !== null && movie().voteAverage !== 0) {
-        <p-progressbar [value]="Math.round(movie().voteAverage * 10)" />
+      <p-progressbar [value]="Math.round(movie().voteAverage * 10)" />
       }
       <div class="watch-info">
         @for (provider of movie().providers; track provider) {
-          <img [src]="imageBaseUrl + 'w45/' + provider.logoPath" alt="Provider Logo" />
+        <img [src]="imageBaseUrl + 'w45/' + provider.logoPath" alt="Provider Logo" />
         }
       </div>
       <div class="button-container">
+        @if (searchMode()) {
+        <p-button label="Add to Watchlist" class="w-full search-action-button" />
+        } @else {
         <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" />
         <p-button icon="pi pi-check" severity="success" [rounded]="true" [outlined]="true" />
+        }
       </div>
     </div>
   </div>
