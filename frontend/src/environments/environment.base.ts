@@ -28,6 +28,6 @@ export const environmentBase = {
     return this.apiUrl + '/movies';
   },
   suggestionUrl() {
-    return this.apiUrl + '/movies/suggestions';
+    return this.apiUrl + '/recommender/suggestions';
   },
 };

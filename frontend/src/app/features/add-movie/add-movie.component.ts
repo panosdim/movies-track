@@ -24,6 +24,13 @@ interface MovieAutocompleteSuggestion {
   posterUrl: string;
 }
 
+interface RecommendedMovie {
+  id: number;
+  title: string;
+  posterPath: string | null;
+  score: number;
+}
+
 type SearchQueryValue = string | MovieAutocompleteSuggestion | null;
 
 @Component({
@@ -50,6 +57,7 @@ export class AddMovieComponent implements OnInit {
   searchQuery = signal('');
   autocompleteSuggestions = signal<MovieAutocompleteSuggestion[]>([]);
   searchResults = signal<TmdbMovie[]>([]);
+  recommendedMovies = signal<RecommendedMovie[]>([]);
   loading = signal(false);
   isMobile = signal(false);
   existingMovieIds = signal<Set<number>>(new Set());
@@ -58,11 +66,44 @@ export class AddMovieComponent implements OnInit {
     this.searchResults().map((movie) => this.mapToWatchlistMovie(movie)),
   );
 
+  recommendedWatchlistMovies = computed<WatchlistMovie[]>(() => {
+    const existingMovieIds = this.existingMovieIds();
+
+    return this.recommendedMovies()
+      .filter((movie) => !existingMovieIds.has(movie.id))
+      .map((movie) => this.mapRecommendedToWatchlistMovie(movie));
+  });
+
   ngOnInit(): void {
     const mediaQuery = window.matchMedia('(max-width: 960px)');
     this.isMobile.set(mediaQuery.matches);
     mediaQuery.addEventListener('change', (e) => this.isMobile.set(e.matches));
     this.loadExistingMovieIds();
+    this.loadRecommendedMovies();
+  }
+
+  private loadRecommendedMovies(): void {
+    this.http.get<RecommendedMovie[]>(environment.suggestionUrl()).subscribe({
+      next: (movies) => {
+        this.recommendedMovies.set(this.deduplicateRecommendedMovies(movies || []));
+      },
+      error: () => {
+        this.recommendedMovies.set([]);
+      },
+    });
+  }
+
+  private deduplicateRecommendedMovies(movies: RecommendedMovie[]): RecommendedMovie[] {
+    const seenMovieIds = new Set<number>();
+
+    return movies.filter((movie) => {
+      if (seenMovieIds.has(movie.id)) {
+        return false;
+      }
+
+      seenMovieIds.add(movie.id);
+      return true;
+    });
   }
 
   private loadExistingMovieIds(): void {
@@ -212,6 +253,17 @@ export class AddMovieComponent implements OnInit {
       poster: movie.posterPath,
       providers: [],
       voteAverage: movie.voteAverage,
+    };
+  }
+
+  private mapRecommendedToWatchlistMovie(movie: RecommendedMovie): WatchlistMovie {
+    return {
+      id: movie.id,
+      movieId: movie.id,
+      title: movie.title,
+      poster: movie.posterPath,
+      providers: [],
+      voteAverage: movie.score,
     };
   }
 }

@@ -1,8 +1,6 @@
 <p-toast position="top-right" />
 
 <div class="add-movie-container">
-  <h1>Add Movie</h1>
-
   <div class="search-wrapper">
     <p-autoComplete
       [ngModel]="searchQuery()"
@@ -56,5 +54,33 @@
         }
       </div>
     }
+  } @else if (recommendedWatchlistMovies().length > 0) {
+    <section class="recommendations-section">
+      <h2>Recommended movies</h2>
+
+      @if (isMobile()) {
+        <div class="results-list">
+          @for (movie of recommendedWatchlistMovies(); track movie.id) {
+            <app-mobile-watch-list-movie-card
+              [movie]="movie"
+              [searchMode]="true"
+              [addDisabled]="isAddToWatchlistDisabled(movie.movieId)"
+              (addToWatchlist)="addToWatchlist($event)"
+            />
+          }
+        </div>
+      } @else {
+        <div class="results-grid">
+          @for (movie of recommendedWatchlistMovies(); track movie.id) {
+            <app-watch-list-movie-card
+              [movie]="movie"
+              [searchMode]="true"
+              [addDisabled]="isAddToWatchlistDisabled(movie.movieId)"
+              (addToWatchlist)="addToWatchlist($event)"
+            />
+          }
+        </div>
+      }
+    </section>
   }
 </div>
