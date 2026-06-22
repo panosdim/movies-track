@@ -10,6 +10,10 @@ export interface AddToWatchlistRequest {
   poster: string | null;
 }
 
+export interface RateMovieRequest {
+  rating: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class MoviesService {
   private readonly http = inject(HttpClient);
@@ -28,5 +32,14 @@ export class MoviesService {
 
   deleteMovie(movieId: number): Observable<void> {
     return this.http.delete<void>(`${environment.moviesUrl()}/${movieId}`);
+  }
+
+  markAsWatched(movieId: number): Observable<WatchedMovie> {
+    return this.http.post<WatchedMovie>(`${environment.watchedMoviesUrl()}/${movieId}`, {});
+  }
+
+  rateMovie(movieId: number, rating: number): Observable<WatchedMovie> {
+    const body: RateMovieRequest = { rating };
+    return this.http.post<WatchedMovie>(`${environment.moviesUrl()}/rate/${movieId}`, body);
   }
 }

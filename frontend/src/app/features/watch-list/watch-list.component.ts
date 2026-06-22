@@ -67,6 +67,14 @@ export class WatchListComponent implements OnInit {
     });
   }
 
+  markAsWatched(movie: WatchlistMovie): void {
+    this.moviesService.markAsWatched(movie.id).subscribe({
+      next: () => {
+        this.movies.update((movies) => movies.filter((item) => item.id !== movie.id));
+      },
+    });
+  }
+
   private deleteMovie(movie: WatchlistMovie): void {
     this.moviesService.deleteMovie(movie.id).subscribe({
       next: () => {

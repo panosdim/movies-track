@@ -19,13 +19,18 @@
         <app-mobile-watch-list-movie-card
           [movie]="movie"
           (deleteMovie)="confirmDeleteMovie($event)"
+          (watchMovie)="markAsWatched($event)"
         />
       }
     </div>
   } @else {
     <div class="movies-grid">
       @for (movie of movies(); track movie.id) {
-        <app-watch-list-movie-card [movie]="movie" (deleteMovie)="confirmDeleteMovie($event)" />
+        <app-watch-list-movie-card
+          [movie]="movie"
+          (deleteMovie)="confirmDeleteMovie($event)"
+          (watchMovie)="markAsWatched($event)"
+        />
       }
     </div>
   }

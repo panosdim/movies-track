@@ -5,17 +5,29 @@
       target="_blank"
       rel="noopener noreferrer"
     >
-      <img alt="Card" style="width: 100%" src="{{ imageBaseUrl }}w185{{ movie().poster }}" />
+      <img
+        alt="Card"
+        style="width: 100%"
+        src="{{ imageBaseUrl }}w185{{ movie().poster }}"
+        [pTooltip]="movie().title ?? ''"
+        tooltipPosition="top"
+      />
     </a>
   </ng-template>
   <ng-template #title>
     <div style="display: flex; align-items: center; justify-content: center">
-      <p-rating [(ngModel)]="movie().rating" />
+      <p-rating [ngModel]="movie().rating" (ngModelChange)="rateMovie.emit($event)" />
     </div>
   </ng-template>
   <ng-template #footer>
     <div style="display: flex; align-items: center; justify-content: center; margin-top: 0.5rem">
-      <p-button class="w-full" icon="pi pi-trash" severity="danger" label="Delete" />
+      <p-button
+        class="w-full"
+        icon="pi pi-trash"
+        severity="danger"
+        label="Delete"
+        (onClick)="deleteMovie.emit(movie())"
+      />
     </div>
   </ng-template>
 </p-card>

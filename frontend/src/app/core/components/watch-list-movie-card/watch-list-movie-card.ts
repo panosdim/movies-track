@@ -18,6 +18,7 @@ export class WatchListMovieCard {
   addDisabled = input(false);
   addToWatchlist = output<WatchlistMovie>();
   deleteMovie = output<WatchlistMovie>();
+  watchMovie = output<WatchlistMovie>();
 
   protected readonly imageBaseUrl = environment.imageBaseUrl;
   protected readonly Math = Math;

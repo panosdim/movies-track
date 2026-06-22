@@ -5,7 +5,13 @@
       target="_blank"
       rel="noopener noreferrer"
     >
-      <img alt="Card" style="width: 100%" src="{{ imageBaseUrl }}w185{{ movie().poster }}" />
+      <img
+        alt="Card"
+        style="width: 100%"
+        src="{{ imageBaseUrl }}w185{{ movie().poster }}"
+        [pTooltip]="movie().title ?? ''"
+        tooltipPosition="top"
+      />
     </a>
   </ng-template>
   <ng-template #title>
@@ -46,6 +52,7 @@
         [outlined]="true"
         pTooltip="Mark as watched"
         tooltipPosition="bottom"
+        (onClick)="watchMovie.emit(movie())"
       />
     </div>
     }

@@ -1,3 +1,5 @@
+<p-confirmDialog />
+
 <div class="movies-container">
   <h1>Watched Movies</h1>
 
@@ -14,13 +16,21 @@
   @if (isMobile()) {
     <div class="movies-list">
       @for (movie of movies(); track movie.id) {
-        <app-mobile-watched-movie-card [movie]="movie" />
+        <app-mobile-watched-movie-card
+          [movie]="movie"
+          (rateMovie)="rateMovie(movie, $event)"
+          (deleteMovie)="confirmDeleteMovie($event)"
+        />
       }
     </div>
   } @else {
     <div class="movies-grid">
       @for (movie of movies(); track movie.id) {
-        <app-watched-movie-card [movie]="movie" />
+        <app-watched-movie-card
+          [movie]="movie"
+          (rateMovie)="rateMovie(movie, $event)"
+          (deleteMovie)="confirmDeleteMovie($event)"
+        />
       }
     </div>
   }

@@ -8,6 +8,7 @@
       <img alt="Card" src="{{ imageBaseUrl }}w92{{ movie().poster }}" />
     </a>
     <div class="card-info">
+      <h3 class="movie-title">{{ movie().title }}</h3>
       @if (movie().voteAverage !== null && movie().voteAverage !== 0) {
       <p-progressbar [value]="Math.round(movie().voteAverage * 10)" />
       }
@@ -32,7 +33,13 @@
           [outlined]="true"
           (onClick)="deleteMovie.emit(movie())"
         />
-        <p-button icon="pi pi-check" severity="success" [rounded]="true" [outlined]="true" />
+        <p-button
+          icon="pi pi-check"
+          severity="success"
+          [rounded]="true"
+          [outlined]="true"
+          (onClick)="watchMovie.emit(movie())"
+        />
         }
       </div>
     </div>
