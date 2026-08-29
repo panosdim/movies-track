@@ -1,7 +1,7 @@
 services:
   db:
     image: postgres:17-alpine
-    container_name: movies-track-db
+    container_name: postgres-db
     restart: unless-stopped
     env_file:
       - .env
@@ -26,10 +26,13 @@ services:
     restart: unless-stopped
     env_file:
       - .env
+    environment:
+      LOG_DIR: /app/logs
     ports:
       - "${API_PORT:-8000}:8000"
     volumes:
       - ./models:/app/models
+      - ./logs:/app/logs
     depends_on:
       db:
         condition: service_healthy

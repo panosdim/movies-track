@@ -1,6 +1,8 @@
 """FastAPI application entrypoint for the Movies Track backend."""
 
 import logging
+import os
+from logging.handlers import RotatingFileHandler
 from fastapi import FastAPI
 from fastapi.concurrency import asynccontextmanager
 from fastapi.middleware.cors import CORSMiddleware
@@ -13,11 +15,22 @@ from app.services.watch_provider_scheduler import start_provider_scheduler
 
 load_dotenv()
 
-# Configure logging
+# Configure logging: console + rotating file (200MB x 5 backups) under LOG_DIR
+LOG_DIR = os.getenv("LOG_DIR", "logs")
+os.makedirs(LOG_DIR, exist_ok=True)
+_log_format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    handlers=[logging.StreamHandler()],
+    format=_log_format,
+    handlers=[
+        logging.StreamHandler(),
+        RotatingFileHandler(
+            os.path.join(LOG_DIR, "app.log"),
+            maxBytes=200 * 1024 * 1024,
+            backupCount=5,
+        ),
+    ],
 )
 
 # Get logger for this module
