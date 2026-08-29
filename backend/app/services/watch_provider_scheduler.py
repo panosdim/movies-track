@@ -18,10 +18,13 @@ logger = logging.getLogger(__name__)
 
 
 def _providers_to_dict(providers: list) -> dict:
-    """Convert list of provider dicts to a dict keyed by provider_name for comparison."""
+    """Convert provider dicts or MovieProvider ORM rows to a name->logo_path dict."""
     result = {}
     for p in providers:
-        result[p["provider_name"]] = p
+        if isinstance(p, dict):
+            result[p["provider_name"]] = p["logo_path"]
+        else:
+            result[p.provider_name] = p.logo_path
     return result
 
 
@@ -107,7 +110,7 @@ def check_watch_provider_changes():
             len(user_changes),
         )
 
-    except (SQLAlchemyError, httpx.HTTPError) as e:
+    except (SQLAlchemyError, httpx.HTTPError, TypeError, AttributeError, ValueError) as e:
         logger.error("Error during provider check: %s", e)
         db.rollback()
     finally:
@@ -144,7 +147,8 @@ def _run_provider_scheduler():
         try:
             schedule.run_pending()
             time.sleep(60)
-        except RuntimeError as e:
+        except Exception as e:  # pylint: disable=broad-except
+            # Catch-all so an unexpected error in a job never kills this loop.
             logger.error("Provider scheduler error: %s", e)
 
 
