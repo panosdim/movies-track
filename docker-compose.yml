@@ -26,8 +26,6 @@ services:
     restart: unless-stopped
     env_file:
       - .env
-    environment:
-      LOG_DIR: /app/logs
     ports:
       - "${API_PORT:-8000}:8000"
     volumes:
