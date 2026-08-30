@@ -35,8 +35,18 @@ def _providers_changed(old_providers: list, new_providers: list) -> bool:
     return old_dict != new_dict
 
 
+def _added_providers(old_providers: list, new_providers: list) -> list:
+    """Return providers that have been newly added since the previous check."""
+    old_provider_names = _providers_to_dict(old_providers)
+    return [
+        provider
+        for provider in new_providers
+        if provider["provider_name"] not in old_provider_names
+    ]
+
+
 def check_watch_provider_changes():
-    """Check all unwatched movies for provider changes and send per-user summary emails."""
+    """Refresh provider data and email users about newly available providers only."""
     logger.info("Starting scheduled check for watch provider changes")
 
     db: Session = SESSIONLOCAL()
@@ -58,7 +68,8 @@ def check_watch_provider_changes():
 
         # Group changed movies by user
         user_changes = {}
-        changed_count = 0
+        updated_count = 0
+        notified_count = 0
 
         for movie in unwatched_movies:
             if not movie.movie_id:
@@ -68,6 +79,8 @@ def check_watch_provider_changes():
             current_providers = movie.providers if movie.providers else []
 
             if _providers_changed(current_providers, new_providers):
+                added_providers = _added_providers(current_providers, new_providers)
+
                 # Update providers in DB
                 db.query(MovieProvider).filter(
                     MovieProvider.movie_id == movie.id
@@ -81,19 +94,22 @@ def check_watch_provider_changes():
                     )
                     db.add(new_provider)
 
-                # Group by user for email notification
+                updated_count += 1
+
+                # A removed provider is a data update, not a newly available service.
+                # Email only when TMDb reports at least one new provider.
                 user_email = movie.user_id
-                if user_email:
+                if user_email and added_providers:
                     if user_email not in user_changes:
                         user_changes[user_email] = []
                     user_changes[user_email].append(
                         {
                             "title": movie.title,
                             "poster": movie.poster,
-                            "providers": new_providers,
+                            "providers": added_providers,
                         }
                     )
-                    changed_count += 1
+                    notified_count += 1
 
         db.commit()
 
@@ -105,8 +121,9 @@ def check_watch_provider_changes():
                 logger.error("Failed to send summary email to %s: %s", user_email, e)
 
         logger.info(
-            "Provider check completed: %d movies changed across %d users",
-            changed_count,
+            "Provider check completed: %d movies updated; %d movies notified across %d users",
+            updated_count,
+            notified_count,
             len(user_changes),
         )
 
