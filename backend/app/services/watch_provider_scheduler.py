@@ -16,6 +16,9 @@ from app.services.watch_provider_service import fetch_movie_watch_providers_batc
 
 logger = logging.getLogger(__name__)
 
+_scheduler_lock = threading.Lock()
+_provider_thread: threading.Thread | None = None
+
 
 def _providers_to_dict(providers: list) -> dict:
     """Convert provider dicts or MovieProvider ORM rows to a name->logo_path dict."""
@@ -171,6 +174,17 @@ def _run_provider_scheduler():
 
 def start_provider_scheduler():
     """Start the watch provider check scheduler as a daemon thread."""
-    provider_thread = threading.Thread(target=_run_provider_scheduler, daemon=True)
-    provider_thread.start()
-    logger.info("Provider scheduler thread started")
+    global _provider_thread
+
+    with _scheduler_lock:
+        if _provider_thread is not None and _provider_thread.is_alive():
+            logger.info("Provider scheduler thread is already running")
+            return
+
+        _provider_thread = threading.Thread(
+            target=_run_provider_scheduler,
+            name="watch-provider-scheduler",
+            daemon=True,
+        )
+        _provider_thread.start()
+        logger.info("Provider scheduler thread started")
