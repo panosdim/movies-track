@@ -10,6 +10,7 @@ FROM base AS builder
 
 COPY backend/requirements.txt .
 RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
+RUN PYTHONPATH=/install/lib/python3.12/site-packages python -c "import psycopg2; import sqlalchemy"
 
 FROM base
 
