@@ -103,9 +103,11 @@ export class LoginComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private updateGridCapacity(container: HTMLElement): void {
-    // Available width/height inside the left panel (padding is 32px on sides)
-    const availableWidth = container.clientWidth;
-    const availableHeight = container.clientHeight;
+    const styles = getComputedStyle(container);
+    const availableWidth =
+      container.clientWidth - parseFloat(styles.paddingLeft) - parseFloat(styles.paddingRight);
+    const availableHeight =
+      container.clientHeight - parseFloat(styles.paddingTop) - parseFloat(styles.paddingBottom);
 
     const cols = Math.max(
       1,

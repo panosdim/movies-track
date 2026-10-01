@@ -15,3 +15,62 @@ script:post-response {
         bru.setVar("token", res.getBody().token);
     }
 }
+
+docs {
+  # Login
+  
+  Authenticates a registered user and returns a signed JWT access token.
+  
+  ## Request
+  
+  `POST {{url}}/login`
+  
+  ### Headers
+  
+  | Header | Value |
+  | --- | --- |
+  | `Content-Type` | `application/json` |
+  
+  ### Request body
+  
+  | Field | Type | Required | Description |
+  | --- | --- | --- | --- |
+  | `email` | string | Yes | Registered user email address. |
+  | `password` | string | Yes | User password. |
+  
+  ```json
+  {
+    "email": "user@example.com",
+    "password": "your-password"
+  }
+  ```
+  
+  ## Expected responses
+  
+  ### 200 OK
+  
+  Authentication succeeded. The response contains a JWT access token.
+  
+  ```json
+  {
+    "accessToken": "<jwt>"
+  }
+  ```
+  
+  ### 401 Unauthorized
+  
+  Returned when the body is missing, either `email` or `password` is blank, the user does not exist, or the password is invalid. No response body is expected.
+  
+  ## Example test flow
+  
+  1. Run **auth/Register Real User** to create a test account.
+  2. Send this login request with that account's email and password.
+  3. Verify the response status is `200` and `accessToken` is present.
+  4. Store `accessToken` in the `token` runtime/environment variable and use it for authenticated requests, typically with `Authorization: Bearer {{token}}`.
+  
+  ## Notes
+  
+  - The successful response field is `accessToken`.
+  - Any post-response script should read `accessToken` rather than `token` when storing the JWT.
+  - Use the existing **auth/Login** request in this collection for this endpoint.
+}
